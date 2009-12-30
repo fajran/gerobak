@@ -64,3 +64,8 @@ INSTALLED_APPS = (
 ACCOUNT_ACTIVATION_DAYS = 7
 EMAIL_HOST='127.0.0.1'
 
+GEROBAK_ARCHS = (
+    ('i386', 'i386'),
+    ('amd64', 'amd64'),
+)
+
