@@ -69,3 +69,8 @@ GEROBAK_ARCHS = (
     ('amd64', 'amd64'),
 )
 
+GEROBAK_APT_GET = '/usr/bin/apt-get'
+GEROBAK_APT_CACHE = '/usr/bin/apt-cache'
+GEROBAK_PROFILE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                        'profiles')
+
