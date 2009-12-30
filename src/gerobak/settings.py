@@ -68,6 +68,7 @@ GEROBAK_ARCHS = (
     ('i386', 'i386'),
     ('amd64', 'amd64'),
 )
+GEROBAK_DEFAULT_ARCH = 'i386'
 
 GEROBAK_APT_GET = '/usr/bin/apt-get'
 GEROBAK_APT_CACHE = '/usr/bin/apt-cache'
