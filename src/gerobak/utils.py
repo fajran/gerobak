@@ -1,7 +1,10 @@
 import uuid
 import shutil
+import os
 
-from gerobak.models import Profile
+from django.conf import settings
+
+#from gerobak.models import Profile
 from gerobak import apt
 
 def get_path(pid):

@@ -4,8 +4,8 @@ from django.conf import settings
 from django.contrib import admin
 admin.autodiscover()
 
-import gerobak.apps.profile
-import gerobak.apps.queue
+import gerobak.apps.profile.urls
+#import gerobak.apps.queue
 
 urlpatterns = patterns('',
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', 
@@ -14,6 +14,6 @@ urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
 
     (r'^p/', include(gerobak.apps.profile.urls)),
-    (r'^q/', include(gerobak.apps.queue.urls)),
+    #(r'^q/', include(gerobak.apps.queue.urls)),
     (r'^$', 'gerobak.views.index'),
 )

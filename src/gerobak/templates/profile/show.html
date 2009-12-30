@@ -1,0 +1,35 @@
+{{ profile.id }}<br>
+{{ profile.name }}
+
+<fieldset>
+<legend>Upload status file:</legend>
+<form method="post" action="status/" enctype="multipart/form-data">
+{{ upload.as_p }}
+<p><input type="submit" value="Upload"/></p>
+</form>
+</fieldset>
+
+<fieldset>
+<legend>Repositories (sources.list)</legend>
+<form method="post" action="sources/">
+{{ sources.as_p }}
+<p><input type="submit" value="Update"/></p>
+</form>
+</fieldset>
+
+<fieldset>
+<legend>Ops</legend>
+<form method="post" action="update/">
+<input type="submit" value="update"/>
+</form>
+
+<form method="post" action="install/">
+{{ install.as_p }}
+<input type="submit" value="install"/>
+</form>
+
+<form method="post" action="search/">
+{{ search.as_p }}
+<input type="submit" value="search"/>
+</form>
+</fieldset>

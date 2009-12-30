@@ -1,0 +1,15 @@
+
+<ul>
+{% for profile in profiles %}
+<li><a href="{% url gerobak.apps.profile.views.show profile.id %}">{{ profile.name }}</a> ({{ profile.arch }})</li>
+{% endfor %}
+</ul>
+
+<fieldset>
+<legend>Add new profile:</legend>
+<form method="post">
+{{ form.as_p }}
+<p><input type="submit" value="Add"/></p>
+</form>
+</fieldset>
+

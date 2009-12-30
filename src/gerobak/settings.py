@@ -58,7 +58,12 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
     'gerobak',
+    'gerobak.apps.profile',
     'registration',
+)
+
+FILE_UPLOAD_HANDLERS = (
+    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
 )
 
 ACCOUNT_ACTIVATION_DAYS = 7
