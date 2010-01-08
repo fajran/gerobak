@@ -35,27 +35,34 @@ def _clean_packages(packages):
 
 def update(path):
     sp = _apt_get(path, 'update')
-    sp.wait()
 
-    return sp.returncode, sp.stdout.read(), sp.stderr.read()
+    (out, err) = sp.communicate()
+    code = sp.returncode
+    
+    return code, out, err
 
 def upgrade(path):
     sp = _apt_get(path, 'upgrade')
-    sp.wait()
 
-    return sp.returncode, sp.stdout.read(), sp.stderr.read()
+    (out, err) = sp.communicate()
+    code = sp.returncode
+    
+    return code, out, err
 
 def install(path, packages):
     pkgs = _clean_packages(packages)
     sp = _apt_get(path, 'install', '--print-uris', '-y', *pkgs)
-    sp.wait()
 
-    return pkgs, sp.returncode, sp.stdout.read(), sp.stderr.read()
+    (out, err) = sp.communicate()
+    code = sp.returncode
+    
+    return pkgs, code, out, err
 
 def search(path, packages):
     pkgs = _clean_packages(packages)
     sp = _apt_cache(path, 'search', *pkgs)
-    sp.wait()
 
-    return pkgs, sp.returncode, sp.stdout.read(), sp.stderr.read()
-
+    (out, err) = sp.communicate()
+    code = sp.returncode
+    
+    return pkgs, code, out, err
