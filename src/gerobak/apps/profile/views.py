@@ -5,6 +5,7 @@ from django import forms
 from django.conf import settings
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.template import RequestContext
 
 from gerobak import utils, apt
 from gerobak.apps.profile.models import Profile
@@ -42,6 +43,18 @@ def _profile(func):
         return func(request, profile)
     return _func
 
+def _updated(func):
+    def _func(request, profile):
+        if profile.status_updated is None or \
+           profile.sources_updated is None or \
+           profile.repo_updated is None:
+            
+            request.user.message_set.create(message="update needed.")
+            return redirect(show, profile.id)
+
+        return func(request, profile)
+    return _func
+
 def handle_uploaded_status(profile, file):
     path = utils.get_path(profile.id)
     status = file.temporary_file_path()
@@ -50,6 +63,7 @@ def handle_uploaded_status(profile, file):
 @login_required
 @_post
 @_profile
+@_updated
 def install(request, profile):
     form = InstallForm(request.POST)
     if form.is_valid():
@@ -71,6 +85,7 @@ def install(request, profile):
 
 @login_required
 @_profile
+@_updated
 def search(request, profile):
     form = SearchForm(request.POST)
     if form.is_valid():
@@ -155,7 +170,8 @@ def show(request, profile):
                                'upload': upload_form,
                                'sources': sources_form,
                                'install': install_form,
-                               'search': search_form})
+                               'search': search_form},
+                              context_instance=RequestContext(request))
 
 @login_required
 def index(request):

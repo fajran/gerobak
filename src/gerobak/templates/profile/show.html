@@ -1,5 +1,20 @@
-{{ profile.id }}<br>
-{{ profile.name }}
+{% if messages %}
+<p>Messages:</p>
+<ul>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<p>Profile:</p>
+<ul>
+<li>id: {{ profile.id }}</li>
+<li>name: {{ profile.name }}</li>
+<li>status updated: {{ profile.status_updated }}</li>
+<li>sources updated: {{ profile.sources_updated }}</li>
+<li>repo updated: {{ profile.repo_updated }}</li>
+</ul>
 
 <fieldset>
 <legend>Upload status file:</legend>
