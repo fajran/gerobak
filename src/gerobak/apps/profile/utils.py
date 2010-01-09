@@ -31,6 +31,16 @@ def parse_apt_install(out):
 
     return extra, suggested, recommended, install, packages, newest
 
+def parse_apt_search(out):
+    res = []
+    
+    for line in out.splitlines():
+        p = line.split(' ', 2)
+        res.append((p[0], p[2]))
+
+    return res
+
 if __name__ == '__main__':
-    print parse_apt_install(open('/tmp/apt-install.txt').read())
+    #print parse_apt_install(open('/tmp/apt-install.txt').read())
+    print parse_apt_search(open('/tmp/apt-search.txt').read())
 
