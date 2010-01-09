@@ -1,15 +1,35 @@
+{% extends "profile/base.html" %}
 
-<ul>
+{% block profilecontent %}
+
+<h2>Profiles</h2>
+
+{% if profiles %}
+
+<table>
+<tr><th>Name</th><th>Architecture</th><th>Description</th></tr>
 {% for profile in profiles %}
-<li><a href="{% url gerobak.apps.profile.views.show profile.id %}">{{ profile.name }}</a> ({{ profile.arch }})</li>
+<tr><td><a href="{% url gerobak.apps.profile.views.show profile.id %}">{{ profile.name }}</a></td>
+    <td>{{ profile.arch }}</td>
+    <td>{{ profile.desc }}</td>
+</tr>
 {% endfor %}
-</ul>
+</table>
 
-<fieldset>
-<legend>Add new profile:</legend>
+{% else %}
+
+<p>You have to add a profile first!</p>
+<p>A profile represents a machine. Use a separate profile for each machine you
+have.</p>
+
+{% endif %}
+
+<div class="add">
+<h3>Add New Profile</h3>
 <form method="post">
 {{ form.as_p }}
-<p><input type="submit" value="Add"/></p>
+<p><input type="submit" value="Add Profile"/></p>
 </form>
-</fieldset>
+</div>
 
+{% endblock %}

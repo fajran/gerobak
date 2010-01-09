@@ -1,0 +1,112 @@
+font-face {
+    font-family: "Gentium";
+    src: local("GenR102"), url("/media/fonts/GenR102.TTF");
+    /* Font license: Open Font License
+                     This Font Software is Copyright (c) 2003-2005, 
+                     SIL International (http://scripts.sil.org/).  
+                     All Rights Reserved.
+       See also: http://dahsy.at/media/Gentium-OFL.txt
+                 http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&item_id=Gentium
+    */
+}
+
+body {
+    /*font-family: "Gentium", "Gill Sans", "Trebuchet MS", "Helvetica", "Tahoma", sans-serif;
+     */
+    font-family: "Lucida Grande", Verdana, Arial, "Bitstream Vera Sans", sans-serif;
+    font-size: 12px;
+    margin: 0px;
+    height: 100%;
+    background: #F0E9E2;
+}
+
+#header {
+    padding: 10px;
+    background: #383A3B;
+}
+#title h1, #title p {
+    display: inline;
+    margin: 0px;
+    color: white;
+}
+#title h1 {
+    font-size: 24px;
+    font-family: "Trebuchet MS", sans-serif;
+}
+#title h1 a {
+    text-decoration: none;
+    color: inherit;
+}
+#login {
+    float: right;
+    padding-top: 10px;
+    font-size: 11px;
+    color: white;
+}
+#login a {
+    color: #aaa;
+}
+
+#content {
+    clear: both;
+    padding: 20px;
+}
+#content h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+#content p {
+    margin-bottom: 5px;
+}
+
+.profile table th {
+    font-weight: bold;
+    font-size: 12px;
+    text-align: center;
+    padding: 2px 10px;
+    background: #918C81;
+    border-bottom: 1px solid #888;
+}
+.profile table td {
+    padding: 5px 15px 5px 10px;
+    font-size: 14px;
+    border-bottom: 1px solid #888;
+}
+.profile table td:first-child { 
+    min-width: 100px;
+}
+.profile table td:first-child + td + td {
+    min-width: 300px;
+}
+.profile table td:first-child + td {
+    text-align: center;
+}
+.profile table td {
+    border-left: 1px dotted #888;
+}
+.profile table td:first-child {
+    border-left: 0px;
+}
+
+.profile .add h3 {
+    font-weight: bold;
+    margin: 40px 0 10px 0;
+}
+
+.profile .add form {
+    width: 360px;
+}
+.profile .add form label {
+    float: left;
+    width: 100px;
+    padding-right: 10px;
+    text-align: right;
+}
+.profile .add form input[type="text"] {
+    width: 250px;
+}
+.profile .add form input[type="submit"] {
+    float: right;
+}
+
+
