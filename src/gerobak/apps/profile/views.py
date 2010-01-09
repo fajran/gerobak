@@ -175,6 +175,7 @@ def sources(request, profile):
         path = utils.get_path(profile.id)
         utils.update_sources(path, sources)
         profile.sources_updated = datetime.now()
+        profile.repo_updated = None
         profile.save()
         return redirect(show, profile.id)
     else:
@@ -191,6 +192,7 @@ def status(request, profile):
     if form.is_valid():
         handle_uploaded_status(profile, request.FILES['file'])
         profile.status_updated = datetime.now()
+        profile.repo_updated = None
         profile.save()
         return redirect(show, profile.id)
     else:
