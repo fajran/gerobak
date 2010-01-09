@@ -14,6 +14,7 @@ from gerobak.apps.profile.models import Profile
 
 class AddProfileForm(forms.Form):
     name = forms.CharField(max_length=50)
+    desc = forms.CharField(max_length=250)
     arch = forms.ChoiceField(choices=settings.GEROBAK_ARCHS,
                              initial=settings.GEROBAK_DEFAULT_ARCH)
 
@@ -229,6 +230,7 @@ def index(request):
             profile = Profile()
             profile.user = request.user
             profile.name = form.cleaned_data['name']
+            profile.desc = form.cleaned_data['desc']
             profile.arch = form.cleaned_data['arch']
             profile.save()
 

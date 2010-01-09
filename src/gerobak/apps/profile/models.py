@@ -11,6 +11,7 @@ class Profile(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     name = models.CharField(max_length=50)
+    desc = models.CharField(max_length=250, null=True, blank=True)
 
     arch = models.CharField(max_length=10, choices=settings.GEROBAK_ARCHS,
                             default=settings.GEROBAK_DEFAULT_ARCH)
