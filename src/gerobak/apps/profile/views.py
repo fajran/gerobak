@@ -14,9 +14,10 @@ from gerobak.apps.profile.models import Profile
 
 class AddProfileForm(forms.Form):
     name = forms.CharField(max_length=50)
-    desc = forms.CharField(max_length=250)
+    desc = forms.CharField(max_length=250, label="Description")
     arch = forms.ChoiceField(choices=settings.GEROBAK_ARCHS,
-                             initial=settings.GEROBAK_DEFAULT_ARCH)
+                             initial=settings.GEROBAK_DEFAULT_ARCH,
+                             label="Architecture")
 
 class UploadStatusForm(forms.Form):
     file = forms.FileField()
