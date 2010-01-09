@@ -1,4 +1,6 @@
 from datetime import datetime
+import tempfile
+import os
 
 from django.http import HttpResponse, Http404, HttpResponseForbidden
 from django import forms
@@ -66,10 +68,41 @@ def _pre_updated(func):
         return func(request, profile)
     return _func
 
+def _decompress(realname, path):
+    # FIXME uncompressed file size should be checked and limited
+
+    fid, tmp = tempfile.mkstemp()
+    fo = open(tmp, 'w')
+
+    if realname.endswith('.gz'):
+        import gzip
+        fi = gzip.open(path, 'rb')
+
+    elif realname.endswith('.bz2'):
+        import bz2
+        fi = bz2.BZ2File(path, 'r')
+
+    fo.write(fi.read())
+
+    fi.close()
+    fo.close()
+
+    return tmp
+
 def handle_uploaded_status(profile, file):
+    # FIXME file size should be checked and limited
+
     path = utils.get_path(profile.id)
     status = file.temporary_file_path()
-    utils.update_status(path, status)
+
+    tmp = None
+    if file.name.endswith('.gz') or file.name.endswith('.bz2'):
+        tmp = _decompress(file.name, file.temporary_file_path())
+        utils.update_status(path, tmp)
+        os.unlink(tmp)
+
+    else:
+        utils.update_status(path, status)
 
 @login_required
 @_post
