@@ -55,6 +55,17 @@ def _updated(func):
         return func(request, profile)
     return _func
 
+def _pre_updated(func):
+    def _func(request, profile):
+        if profile.status_updated is None or \
+           profile.sources_updated is None:
+            
+            request.user.message_set.create(message="status or sources is missing")
+            return redirect(show, profile.id)
+
+        return func(request, profile)
+    return _func
+
 def handle_uploaded_status(profile, file):
     path = utils.get_path(profile.id)
     status = file.temporary_file_path()
@@ -108,6 +119,7 @@ def search(request, profile):
 @login_required
 @_post
 @_profile
+@_pre_updated
 def update(request, profile):
     path = utils.get_path(profile.id)
     ret, out, err = apt.update(path)
