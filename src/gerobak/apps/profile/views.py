@@ -241,11 +241,8 @@ def index(request):
             return redirect(index)
         
     profiles = Profile.objects.filter(user=request.user)
-    if len(profiles) == 0:
-        return render_to_response('profile/index_empty.html', 
-                                  {'form': form})
-    else:
-        return render_to_response('profile/index.html',
-                                  {'form': form,
-                                   'profiles': profiles})
+    return render_to_response('profile/index.html',
+                              {'form': form,
+                               'profiles': profiles},
+                              context_instance=RequestContext(request))
     
