@@ -192,9 +192,14 @@ def status(request, profile):
     form = UploadStatusForm(request.POST, request.FILES)
     print request.FILES.keys()
     if form.is_valid():
-        handle_uploaded_status(profile, request.FILES['file'])
-        profile.status_updated = datetime.now()
+        path = handle_uploaded_status(profile, request.FILES['file'])
         profile.repo_updated = None
+        profile.status_updated = datetime.now()
+
+        size, hash = utils.get_status_info(path)
+        profile.status_size = size
+        profile.status_hash = hash
+
         profile.save()
         return redirect(show, profile.id)
     else:
