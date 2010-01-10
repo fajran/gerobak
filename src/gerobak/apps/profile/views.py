@@ -2,6 +2,11 @@ from datetime import datetime
 import tempfile
 import os
 
+try:
+    import simplejson as json
+except ImportError:
+    import json
+
 from django.http import HttpResponse, Http404, HttpResponseForbidden
 from django import forms
 from django.conf import settings
@@ -11,6 +16,9 @@ from django.template import RequestContext
 
 from gerobak import utils, apt
 from gerobak.apps.profile.models import Profile
+from gerobak.apps.profile.utils import parse_apt_install, \
+                                       parse_apt_search, \
+                                       parse_apt_show
 
 class AddProfileForm(forms.Form):
     name = forms.CharField(max_length=50)
@@ -106,6 +114,8 @@ def handle_uploaded_status(profile, file):
     else:
         utils.update_status(path, status)
 
+    return path
+
 @login_required
 @_post
 @_profile
@@ -132,7 +142,53 @@ def install(request, profile):
 @login_required
 @_profile
 @_updated
+def info(request, profile, pkg):
+    format = request.GET.get('format', 'html')
+    if not format in ['html', 'json']:
+        format = 'html'
+
+    path = utils.get_path(profile.id)
+    pkg, code, out, err = apt.show(path, pkg)
+
+    if code == 100: # Not found
+        raise Http404()
+        
+    info, keys = parse_apt_show(out)
+
+    sdesc = info['Description'].split("\n")[0]
+    desc = "\n".join(info['Description'].split("\n")[1:])
+
+    data = []
+    for key in keys:
+        data.append((key, info[key]))
+
+    if format == 'html':
+        return render_to_response('profile/info.html',
+                                  {'pkg': pkg,
+                                   'desc': desc,
+                                   'sdesc': sdesc,
+                                   'data': data})
+
+    elif format == 'json':
+        data = {'stat': 'ok',
+                'type': 'pkgshow',
+                'data': {'package': pkg,
+                         'desc': desc,
+                         'sdesc': sdesc,
+                         'data': data}}
+        jdata = json.dumps(data)
+        print jdata
+        return render_to_response('profile/json', {'json': jdata},
+                                  mimetype='application/json')
+
+@login_required
+@_profile
+@_updated
 def search(request, profile):
+    format = request.GET.get('format', 'html')
+    if not format in ['html', 'json']:
+        format = 'html'
+
     form = SearchForm(request.POST)
     if form.is_valid():
         packages = form.cleaned_data['packages']
@@ -141,11 +197,10 @@ def search(request, profile):
 
         pkgs = ' '.join(pkgs)
 
-        return render_to_response('profile/search.html', 
+        return render_to_response('profile/search.%s' % format, 
                                   {'pkgs': pkgs,
                                    'ret': ret,
-                                   'out': out,
-                                   'err': err})
+                                   'items': parse_apt_search(out)})
     else:
         print "invalid"
         print form.as_p()
