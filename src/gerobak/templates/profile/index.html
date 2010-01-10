@@ -6,7 +6,7 @@
 
 {% if profiles %}
 
-<table>
+<table class="profiles">
 <tr><th>Name</th><th>Architecture</th><th>Description</th></tr>
 {% for profile in profiles %}
 <tr><td><a href="{% url gerobak.apps.profile.views.show profile.id %}">{{ profile.name }}</a></td>

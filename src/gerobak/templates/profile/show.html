@@ -1,50 +1,214 @@
+{% extends "profile/base.html" %}
+
+{% block profilecontent %}
+
 {% if messages %}
-<p>Messages:</p>
+<div class="msg ui-widget"><div class="ui-state-error ui-corner-all">
 <ul>
     {% for message in messages %}
     <li>{{ message }}</li>
     {% endfor %}
 </ul>
+</div></div>
 {% endif %}
 
-<p>Profile:</p>
-<ul>
-<li>id: {{ profile.id }}</li>
-<li>name: {{ profile.name }}</li>
-<li>status updated: {{ profile.status_updated }}</li>
-<li>sources updated: {{ profile.sources_updated }}</li>
-<li>repo updated: {{ profile.repo_updated }}</li>
-</ul>
+<div id="side">
+<div class="title">
+<h2>{{ profile.name }}</h2>
+{% if profile.desc %}
+<p>&ndash; {{ profile.desc }}</p>
+{% endif %}
+</div>
 
-<fieldset>
-<legend>Upload status file:</legend>
+<fieldset id="status" class="sideblock">
+    <legend>Status File</legend>
+    {% if profile.status_updated %}
+    <p><span class="label">Last update:</span> {{ profile.status_updated|date:"j M y H:i" }}</p>
+    {% else %}
+    <p><span class="label">Last update:</span> Never</p>
+    {% endif %}
+    <p><span class="label">Size:</span> {{ profile.status_size|default_if_none:"Unknown" }}</p>
+    <p><span class="label">MD5 Hash:</span> <code class="md5">{{ profile.status_hash|default_if_none:"Unknown" }}</code></p>
+    <p class="cmd"><button onclick="show_dialog('#dialog-status-upload')">upload status file</button></p>
+    <p class="cmd"><button onclick="show_dialog('#dialog-status-predefined')">use prefedined status file</button></p>
+</fieldset>
+
+<fieldset id="sources" class="sideblock">
+    <legend>Software Sources</legend>
+    {% if profile.sources_updated %}
+    <p><span class="label">Last update:</span> {{ profile.sources_updated|date:"j M y H:i" }}</p>
+    {% else %}
+    <p><span class="label">Last update:</span> Never</p>
+    {% endif %}
+    <p><span class="label">Total:</span> {{ profile.sources_total|default_if_none:"0" }}</p>
+    <p class="cmd"><button onclick="show_dialog('#dialog-sources')">view/edit sources</button></p>
+</fieldset>
+
+<fieldset id="update" class="sideblock">
+    <legend>Update Repository</legend>
+    {% if profile.repo_updated %}
+    <p><span class="label">Last update:</span> {{ profile.repo_updated|date:"j M y H:i" }}</p>
+    {% else %}
+    <p><span class="label">Last update:</span> Never</p>
+    {% endif %}
+    <form method="post" action="update/">
+    <p class="cmd"><input type="submit" value="Update Repository"/></p>
+    </form>
+</fieldset>
+
+</div>
+
+<div id="center">
+
+<div class="tabs">
+    <ul>
+    <li><a href="#search">Search</a></li>
+    <li><a href="#install">Install</a></li>
+    <li><a href="#upgrade">Upgrade</a></li>
+    </ul>
+    <div id="search">
+        <form method="post" action="search/" onsubmit="return submit_search(this)">
+        <p><label for="id_packages">Packages:</label>
+            {{ search.packages }}
+            <input type="submit" value="search"/>
+        </p>
+        </form>
+        <div id="search-result">
+        </div>
+    </div>
+    <div id="install">
+        <form method="post" action="install/">
+        <p><label for="id_packages">Packages:</label>
+            {{ install.packages }}
+            <input type="submit" value="install"/>
+        </p>
+        </form>
+
+    </div>
+    <div id="upgrade">
+        <form method="post" action="upgrade/">
+        <input type="submit" value="upgrade"/>
+        </form>
+        
+        <form method="post" action="dist-upgrade/">
+        <input type="submit" value="dist-upgrade"/>
+        </form>
+    </div>
+</div>
+
+</div> <!-- end: center -->
+
+<div class="dialog" id="dialog-status-upload" title="Upload Status File">
+<p>This file is located at <code>/var/lib/dpkg/status</code> in your
+machine.</p> 
+<p>You can upload the gzip (<code>.gz</code>) or bzip2 (<code>.bz2</code>)
+compressed file.</p>
 <form method="post" action="status/" enctype="multipart/form-data">
 {{ upload.as_p }}
 <p><input type="submit" value="Upload"/></p>
 </form>
-</fieldset>
+</div>
 
-<fieldset>
-<legend>Repositories (sources.list)</legend>
+<div class="dialog" id="dialog-status-predefined" title="Use Predefined Status File">
+predefined status file
+</div>
+
+<div class="dialog" id="dialog-sources" title="Software Sources">
+<p>Write your sources list as written in <code>/etc/apt/sources.list</code></p>
 <form method="post" action="sources/">
-{{ sources.as_p }}
+{{ sources.sources }}
 <p><input type="submit" value="Update"/></p>
 </form>
-</fieldset>
+</div>
 
-<fieldset>
-<legend>Ops</legend>
-<form method="post" action="update/">
-<input type="submit" value="update"/>
-</form>
+<div class="dialog" id="dialog-package-show" title="Package Information">
+    <p class="desc">short description</p>
+    <pre class="desc">longer
+description</pre>
+    <table></table>
+</div>
 
-<form method="post" action="install/">
-{{ install.as_p }}
-<input type="submit" value="install"/>
-</form>
+{% endblock %}
 
-<form method="post" action="search/">
-{{ search.as_p }}
-<input type="submit" value="search"/>
-</form>
-</fieldset>
+{% block extrahead %}
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.dialog').dialog({autoOpen: false, modal: true});
+    $('#dialog-status-upload').dialog('option', 'width', 500);
+    $('#dialog-sources').dialog('option', 'width', 500);
+    $('#dialog-package-show').dialog('option', 'width', 700);
+    $('#dialog-package-show').dialog('option', 'maxHeight', 500);
+    $('.tabs').tabs();
+});
+function show_dialog(s) {
+    $(s).dialog('open');
+}   
+function add_package(pkg) {
+    console.log('add package:', pkg);
+}
+function htmlentities(txt) {
+    txt = txt.replace(/</g, '&lt;');
+    txt = txt.replace(/>/g, '&gt;');
+    return txt;
+}
+function show_package(pkg) {
+    console.log('show package:', pkg);
+    var dialog = $('#dialog-package-show');
+    dialog.find('h3').text(pkg);
+    dialog.find('div').text('');
+    dialog.find('p').text('');
+    dialog.find('pre').html('');
+    dialog.find('table').html('');
+    dialog.dialog('open');
+    $.getJSON('show/'+pkg+'/?format=json', function(data, stat) {
+        console.log('stat:', stat);
+        dialog.find('p.desc').text(data.data.sdesc);
+        dialog.find('pre.desc').text(data.data.desc);
+
+        var table = dialog.find('table');
+        var info = data.data.data;
+        var len = info.length;
+        for (var i=0; i<len; i++) {
+            var key = info[i][0];
+            var value = htmlentities(info[i][1]);
+            table.append('<tr><td>'+key+'</td><td>'+value+'</td></tr>');
+        }
+        dialog.dialog('option', 'position', ['center', 25]);
+        dialog.dialog('option', 'title', data.data.package);
+    });
+    return false;
+}
+function show_search(data) {
+    var items = data.data.items;
+    var len = items.length;
+    var obj = $('#search-result');
+    obj.html('<table class="search"></table>');
+    var table = obj.find('table');
+    table.append('<tr><th></th><th>Package</th><th>Description</th><th></th></tr>');
+    for (var i=0; i<len; i++) {
+        var pkg = items[i][0];
+        var desc = items[i][1];
+        var pkglink = '<a href="show/'+pkg+'/" onclick="return show_package(\''+pkg+'\')">'+pkg+'</a>';
+        var addlink = '<span onclick="add_package(\''+pkg+'\')">add</a>';
+        table.append('<tr><td>'+(i+1)+'</td><td>'+pkglink+'</td><td>'+desc+'</td><td>'+addlink+'</td></tr>');
+    }
+}
+function submit_search(f) {
+    var packages = f.packages.value;
+    $.ajax({
+        type: 'POST',
+        url: 'search/?format=json',
+        dataType: 'json',
+        data: {packages: packages},
+        complete: function(xhr, stat) {
+            console.log('complete');
+            console.log('stat:', stat);
+        },
+        success: function(data, stat) {
+            show_search(data);
+        }
+    });
+    return false;
+}
+</script>
+{% endblock %}

@@ -1,0 +1,10 @@
+{'stat': 'ok',
+ 'type': 'search',
+ 'data': {'packages': 'dasda',
+          'items': [
+{% for item in items %}
+           ['{{ item.0 }}', '{{ item.1 }}'],
+{% endfor %}
+          ]
+         }
+}

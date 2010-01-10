@@ -1,0 +1,10 @@
+<h1>{{ pkg }}</h1>
+<p>{{ sdesc }}</p>
+<pre>{{ desc }}</pre>
+<table>
+{% for k, v in data %}
+{% ifnotequal k "Description" %}
+<tr><td>{{ k }}</td><td>{{ v }}</td></tr>
+{% endifnotequal %}
+{% endfor %}
+</table>

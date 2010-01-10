@@ -1,22 +1,9 @@
-font-face {
-    font-family: "Gentium";
-    src: local("GenR102"), url("/media/fonts/GenR102.TTF");
-    /* Font license: Open Font License
-                     This Font Software is Copyright (c) 2003-2005, 
-                     SIL International (http://scripts.sil.org/).  
-                     All Rights Reserved.
-       See also: http://dahsy.at/media/Gentium-OFL.txt
-                 http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&item_id=Gentium
-    */
-}
-
 body {
-    /*font-family: "Gentium", "Gill Sans", "Trebuchet MS", "Helvetica", "Tahoma", sans-serif;
-     */
     font-family: "Lucida Grande", Verdana, Arial, "Bitstream Vera Sans", sans-serif;
     font-size: 12px;
     margin: 0px;
-    height: 100%;
+}
+html {
     background: #F0E9E2;
 }
 
@@ -59,7 +46,7 @@ body {
     margin-bottom: 5px;
 }
 
-.profile table th {
+.profile table.profiles th {
     font-weight: bold;
     font-size: 12px;
     text-align: center;
@@ -67,21 +54,21 @@ body {
     background: #918C81;
     border-bottom: 1px solid #888;
 }
-.profile table td {
+.profile table.profiles td {
     padding: 5px 15px 5px 10px;
     font-size: 14px;
     border-bottom: 1px solid #888;
 }
-.profile table td:first-child { 
+.profile table.profiles td:first-child { 
     min-width: 100px;
 }
-.profile table td:first-child + td + td {
+.profile table.profiles td:first-child + td + td {
     min-width: 300px;
 }
-.profile table td:first-child + td {
+.profile table.profiles td:first-child + td {
     text-align: center;
 }
-.profile table td {
+.profile table.profiles td {
     border-left: 1px dotted #888;
 }
 .profile table td:first-child {
@@ -109,4 +96,138 @@ body {
     float: right;
 }
 
+#content div.msg {
+    margin-bottom: 20px;
+}
+#content div.msg ul {
+    margin: 10px;
+}
+#content div.msg ul li {
+    margin-left: 20px;
+    list-style: disc;
+}
+
+.profile .title h2, .profile .title p {
+    display: inline;
+}
+
+.profile .status {
+    border: 1px solid black;
+}
+
+.profile .sources {
+    border: 1px solid black;
+}
+
+.profile .update {
+    border: 1px solid black;
+}
+
+.profile fieldset.sideblock {
+    border-top: 1px dotted #888;
+    padding: 5px;
+    width: 200px;
+    font-size: 11px;
+    margin-top: 15px;
+}
+.profile fieldset.sideblock legend {
+    font-weight: bold;
+    color: #444;
+}
+.profile fieldset.sideblock span.label {
+    font-weight: bold;
+}
+.profile fieldset#status.sideblock label {
+    display: block;
+    font-weight: bold;
+}
+.profile fieldset#status.sideblock code.md5 {
+    font-size: 10px;
+    display: block;
+}
+.profile fieldset.sideblock p.cmd {
+    text-align: center;
+}
+.profile fieldset.sideblock p.cmd button {
+    border: 0px;
+    background: #ED4262;
+    cursor: pointer;
+    color: white;
+
+    background: #F0E9E2;
+    color: black;
+    text-decoration: underline;
+}
+
+.profile #side {
+    position: fixed;
+}
+.profile #center {
+    margin-left: 230px;
+}
+
+.profile .dialog {
+    display: none;
+}
+.dialog p {
+    margin-bottom: 10px;
+}
+
+#dialog-sources textarea {
+    width: 470px;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.profile table.search {
+    margin-top: 20px;
+}
+.profile table.search td {
+    font-size: 13px;
+    padding: 2px 10px;
+}
+.profile table.search tr:nth-child(odd) {
+    background: #ddd;
+}
+.profile table.search tr:hover {
+    background: #F7E66B;
+}
+.profile table.search td:first-child {
+    text-align: right;
+    font-size: 10px;
+}
+.profile table.search th {
+    font-size: 12px;
+    text-align: center;
+    font-weight: bold;
+    background: #aaa;
+    padding: 3px;
+}
+.profile table.search td:first-child + td,
+.profile table.search td:first-child + td + td {
+    padding-right: 20px;
+}
+.profile table.search td:first-child + td + td + td {
+    font-size: 10px;
+}
+.profile table.search td:first-child + td + td + td span {
+    cursor: pointer;
+}
+
+#dialog-package-show p.desc {
+    font-size: 14px;
+}
+#dialog-package-show pre.desc {
+    font-size: 12px;
+}
+#dialog-package-show table {
+    margin-top: 10px;
+    font-size: 12px;
+}
+#dialog-package-show table td {
+    padding: 2px 0;
+}
+#dialog-package-show table td:first-child {
+    padding-right: 10px;
+}
 
