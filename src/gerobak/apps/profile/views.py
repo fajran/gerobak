@@ -32,23 +32,23 @@ class SearchForm(forms.Form):
     packages = forms.CharField()
 
 def _post(func):
-    def _func(request, pid):
+    def _func(request, pid, *args, **kwargs):
         if request.method != 'POST':
             return redirect(show, pid)
-        return func(request, pid)
+        return func(request, pid, *args, **kwargs)
     return _func
 
 def _profile(func):
-    def _func(request, pid):
+    def _func(request, pid, *args, **kwargs):
         profile = get_object_or_404(Profile, pk=pid)
         if profile.user != request.user:
             # TODO
             return HttpResponseForbidden()
-        return func(request, profile)
+        return func(request, profile, *args, **kwargs)
     return _func
 
 def _updated(func):
-    def _func(request, profile):
+    def _func(request, profile, *args, **kwargs):
         if profile.status_updated is None or \
            profile.sources_updated is None or \
            profile.repo_updated is None:
@@ -56,18 +56,18 @@ def _updated(func):
             request.user.message_set.create(message="update needed.")
             return redirect(show, profile.id)
 
-        return func(request, profile)
+        return func(request, profile, *args, **kwargs)
     return _func
 
 def _pre_updated(func):
-    def _func(request, profile):
+    def _func(request, profile, *args, **kwargs):
         if profile.status_updated is None or \
            profile.sources_updated is None:
             
             request.user.message_set.create(message="status or sources is missing")
             return redirect(show, profile.id)
 
-        return func(request, profile)
+        return func(request, profile, *args, **kwargs)
     return _func
 
 def _decompress(realname, path):
