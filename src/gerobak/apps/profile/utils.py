@@ -40,7 +40,7 @@ def parse_apt_search(out):
 
     return res
 
-def parse_apt_show(out):
+def _parse_apt_show_single(out):
     res = {}
     keys = []
     field = None
@@ -68,6 +68,11 @@ def parse_apt_show(out):
 
     return values, keys
     
+def parse_apt_show(out):
+    p = filter(lambda x: x != '', out.split("\n\n"))
+    info = map(_parse_apt_show_single, p)
+    return info[0]
+
 if __name__ == '__main__':
     #print parse_apt_install(open('/tmp/apt-install.txt').read())
     #print parse_apt_search(open('/tmp/apt-search.txt').read())
