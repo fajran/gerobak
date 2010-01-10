@@ -42,7 +42,15 @@ def update(path):
     return code, out, err
 
 def upgrade(path):
-    sp = _apt_get(path, 'upgrade')
+    sp = _apt_get(path, 'upgrade', '--print-uris', '-y')
+
+    (out, err) = sp.communicate()
+    code = sp.returncode
+    
+    return code, out, err
+
+def dist_upgrade(path):
+    sp = _apt_get(path, 'dist-upgrade', '--print-uris', '-y')
 
     (out, err) = sp.communicate()
     code = sp.returncode

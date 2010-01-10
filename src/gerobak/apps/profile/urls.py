@@ -5,6 +5,8 @@ from gerobak.apps.profile import views
 
 urlpatterns = patterns('',
     (r'^(?P<pid>\d+)/install/$', views.install),
+    (r'^(?P<pid>\d+)/upgrade/$', views.upgrade),
+    (r'^(?P<pid>\d+)/dist-upgrade/$', views.dist_upgrade),
     (r'^(?P<pid>\d+)/search/$', views.search),
     (r'^(?P<pid>\d+)/update/$', views.update),
     (r'^(?P<pid>\d+)/sources/$', views.sources),
