@@ -231,3 +231,63 @@ html {
     padding-right: 10px;
 }
 
+#install form label {
+    float: left;
+    width: 65px;
+    text-align: right;
+    padding-right: 5px;
+}
+#install-package-list,
+#install-package-button {
+    margin-left: 70px;
+    margin-bottom: 10px;
+}
+#install-package-button {
+    display: none;
+}
+#install-package-list li {
+    display: inline;
+}
+#install-package-list span {
+    cursor: pointer;
+    text-decoration: underline;
+}
+#install-package-list span:hover {
+    text-decoration: none;
+}
+#install-package-list sup {
+    vertical-align: 3px;
+    padding-left: 2px;
+    font-size: 12px;
+    cursor: pointer;
+    visibility: hidden;
+}
+#install-package-list sup:hover {
+    text-decoration: underline;
+}
+#install-package-list li:hover sup {
+    visibility: visible;
+}
+
+.install-result .side {
+    float: right;
+    width: 200px;
+    margin-left: 20px;
+}
+.install-result .side .pkgs p span {
+    cursor: pointer;
+}
+.install-result .side .pkgs p span:hover {
+    text-decoration: underline;
+}
+.install-result h3 {
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: underline;
+    margin-bottom: 10px;
+}
+.install-result .side .pkgs {
+    margin-bottom: 15px;
+}
+
+
