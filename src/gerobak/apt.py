@@ -66,3 +66,13 @@ def search(path, packages):
     code = sp.returncode
     
     return pkgs, code, out, err
+
+def show(path, package):
+    pkgs = _clean_packages(package)
+    sp = _apt_cache(path, 'show', pkgs[0])
+
+    (out, err) = sp.communicate()
+    code = sp.returncode
+    
+    return pkgs, code, out, err
+
