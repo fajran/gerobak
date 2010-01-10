@@ -13,6 +13,8 @@ def parse_apt_install(out):
     install = []
     packages = []
     newest = []
+    upgrade = []
+    keptback = []
 
     out2 = out.replace("\n  ", "  ")
     for line in out2.splitlines():
@@ -26,10 +28,15 @@ def parse_apt_install(out):
             recommended = line.split(':', 1)[1].strip().split()
         elif line.startswith('The following NEW packages will be installed:'):
             install = line.split(':', 1)[1].strip().split()
+        elif line.startswith('The following packages have been kept back:'):
+            keptback = line.split(':', 1)[1].strip().split()
+        elif line.startswith('The following packages will be upgraded:'):
+            upgrade = line.split(':', 1)[1].strip().split()
         elif line.startswith("'"):
             packages.append(_parse_pkg_url(line))
 
-    return extra, suggested, recommended, install, packages, newest
+    return extra, suggested, recommended, install, packages, newest, \
+           upgrade, keptback
 
 def parse_apt_search(out):
     res = []
