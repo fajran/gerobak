@@ -69,10 +69,11 @@ def search(path, packages):
 
 def show(path, package):
     pkgs = _clean_packages(package)
-    sp = _apt_cache(path, 'show', pkgs[0])
+    pkg = pkgs[0]
+    sp = _apt_cache(path, 'show', pkg)
 
     (out, err) = sp.communicate()
     code = sp.returncode
     
-    return pkgs, code, out, err
+    return pkg, code, out, err
 
