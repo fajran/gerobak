@@ -17,8 +17,13 @@ class Profile(models.Model):
                             default=settings.GEROBAK_DEFAULT_ARCH)
 
     repo_updated = models.DateTimeField(null=True, default=None)
+
     sources_updated = models.DateTimeField(null=True, default=None)
+    sources_total = models.IntegerField(null=True, default=None)
+
     status_updated = models.DateTimeField(null=True, default=None)
+    status_hash = models.CharField(max_length=32, null=True, default=None)
+    status_size = models.IntegerField(default=0)
 
     def is_ready(self):
         return self.repo_updated is not None and \
