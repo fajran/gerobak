@@ -233,7 +233,6 @@ def info(request, profile, pkg):
                          'sdesc': sdesc,
                          'data': data}}
         jdata = json.dumps(data)
-        print jdata
         return render_to_response('profile/json', {'json': jdata},
                                   mimetype='application/json')
 
