@@ -120,20 +120,76 @@ def handle_uploaded_status(profile, file):
 @_post
 @_profile
 @_updated
+def upgrade(request, profile):
+    format = request.GET.get('format', 'html')
+    if not format in ['html', 'json']:
+        format = 'html'
+
+    path = utils.get_path(profile.id)
+    ret, out, err = apt.upgrade(path)
+    
+    return _show_install(out, format)
+
+@login_required
+@_post
+@_profile
+@_updated
+def dist_upgrade(request, profile):
+    format = request.GET.get('format', 'html')
+    if not format in ['html', 'json']:
+        format = 'html'
+
+    path = utils.get_path(profile.id)
+    ret, out, err = apt.dist_upgrade(path)
+    
+    return _show_install(out, format)
+
+
+def _show_install(out, format):
+    extra, suggested, recommended, install, packages, newest, \
+        upgrade, keptback = parse_apt_install(out)
+
+    if format == 'html':
+        return render_to_response('profile/install.html',
+                                  {'extra': extra,
+                                   'suggested': suggested,
+                                   'recommended': recommended,
+                                   'install': install,
+                                   'urls': packages,
+                                   'newest': newest,
+                                   'upgrade': upgrade,
+                                   'keptback': keptback})
+    elif format == 'json':
+        data = {'stat': 'ok',
+                'type': 'install',
+                'data': {'extra': extra,
+                         'suggested': suggested,
+                         'recommended': recommended,
+                         'install': install,
+                         'urls': packages,
+                         'newest': newest,
+                         'upgrade': upgrade,
+                         'keptback': keptback}}
+        jdata = json.dumps(data)
+        return render_to_response('profile/json', {'json': jdata},
+                                  mimetype='text/plain')
+
+@login_required
+@_post
+@_profile
+@_updated
 def install(request, profile):
+    format = request.GET.get('format', 'html')
+    if not format in ['html', 'json']:
+        format = 'html'
+
     form = InstallForm(request.POST)
     if form.is_valid():
         packages = form.cleaned_data['packages']
         path = utils.get_path(profile.id)
         pkgs, ret, out, err = apt.install(path, packages)
 
-        pkgs = ' '.join(pkgs)
-
-        return render_to_response('profile/install.html', 
-                                  {'pkgs': pkgs,
-                                   'ret': ret,
-                                   'out': out,
-                                   'err': err})
+        return _show_install(out, format)
     else:
         print "invalid"
         print form.as_p()
