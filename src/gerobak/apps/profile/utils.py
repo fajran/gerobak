@@ -40,7 +40,34 @@ def parse_apt_search(out):
 
     return res
 
+def parse_apt_show(out):
+    res = {}
+    field = None
+    
+    for line in out.splitlines():
+        if line.strip() == '':
+            continue
+
+        if line.startswith(' '):
+            content = line.strip()
+            if content == '.':
+                content = ''
+        else:
+            field, content = line.split(':', 1)
+            content = content.strip()
+        c = res.get(field, [])
+        c.append(content)
+        res[field] = c
+
+    for key in res.keys():
+        res[key] = "\n".join(res[key])
+
+    res['#short-description'] = res['Description'].split("\n")[0]
+
+    return res
+    
 if __name__ == '__main__':
     #print parse_apt_install(open('/tmp/apt-install.txt').read())
-    print parse_apt_search(open('/tmp/apt-search.txt').read())
+    #print parse_apt_search(open('/tmp/apt-search.txt').read())
+    print parse_apt_show(open('/tmp/apt-show.txt').read())
 
