@@ -1,6 +1,7 @@
 import uuid
 import shutil
 import os
+import hashlib
 
 from django.conf import settings
 
@@ -30,6 +31,18 @@ def get_repo(path):
     
 def update_status(path, status):
     shutil.copyfile(status, os.path.join(path, 'status'))
+
+def get_status_info(path):
+    status = os.path.join(path, 'status')
+
+    m = hashlib.md5()
+    m.update(open(status).read())
+    m.digest()
+    hash = m.hexdigest()
+
+    size = os.path.getsize(status)
+
+    return size, hash
 
 def update_sources(path, items):
     sources = items
