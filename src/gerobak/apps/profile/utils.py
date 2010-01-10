@@ -62,10 +62,11 @@ def parse_apt_show(out):
         c.append(content)
         res[field] = c
 
+    values = {}
     for key in keys:
-        res[key] = "\n".join(res[key])
+        values[key] = "\n".join(res[key])
 
-    return res, keys
+    return values, keys
     
 if __name__ == '__main__':
     #print parse_apt_install(open('/tmp/apt-install.txt').read())
