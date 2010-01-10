@@ -42,6 +42,7 @@ def parse_apt_search(out):
 
 def parse_apt_show(out):
     res = {}
+    keys = []
     field = None
     
     for line in out.splitlines():
@@ -55,16 +56,16 @@ def parse_apt_show(out):
         else:
             field, content = line.split(':', 1)
             content = content.strip()
+            keys.append(field)
+
         c = res.get(field, [])
         c.append(content)
         res[field] = c
 
-    for key in res.keys():
+    for key in keys:
         res[key] = "\n".join(res[key])
 
-    res['#short-description'] = res['Description'].split("\n")[0]
-
-    return res
+    return res, keys
     
 if __name__ == '__main__':
     #print parse_apt_install(open('/tmp/apt-install.txt').read())
