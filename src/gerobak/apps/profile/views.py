@@ -223,12 +223,18 @@ def info(request, profile, pkg):
         
     info, keys = parse_apt_show(out)
 
-    sdesc = info['Description'].split("\n")[0]
-    desc = "\n".join(info['Description'].split("\n")[1:])
+    if info is None:
+        pkg = None
+        sdesc = ''
+        desc = ''
+        data = []
+    else:
+        sdesc = info['Description'].split("\n")[0]
+        desc = "\n".join(info['Description'].split("\n")[1:])
 
-    data = []
-    for key in keys:
-        data.append((key, info[key]))
+        data = []
+        for key in keys:
+            data.append((key, info[key]))
 
     if format == 'html':
         return render_to_response('profile/info.html',

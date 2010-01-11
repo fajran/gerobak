@@ -41,6 +41,14 @@ div.loader img {
     color: #444;
 }
 
+#dialog-package-show .notfound {
+    text-align: center;
+    padding: 50px 20px;
+}
+#dialog-package-show .notfound strong {
+    font-weight: bold;
+}
+
 /*= Status File and Software Sources Dialogs
  */
 

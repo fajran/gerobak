@@ -81,6 +81,7 @@ def _parse_apt_show_single(out):
 def parse_apt_show(out):
     p = filter(lambda x: x != '', out.split("\n\n"))
     info = map(_parse_apt_show_single, p)
+    info.append((None, []))
     return info[0]
 
 if __name__ == '__main__':
