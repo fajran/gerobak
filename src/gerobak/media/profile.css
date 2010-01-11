@@ -93,26 +93,14 @@ div.loader img {
 #search-result td {
     padding: 3px 15px 3px 10px;
 }
+#search-result td:first-child {
+    padding: 3px;
+}
 #search-result tr:nth-child(odd) {
     background: #ddd;
 }
 #search-result tr:hover {
     background: #FFF3A8;
-}
-#search-result td:first-child {
-    font-size: 10px;
-    text-align: right;
-    padding: 5px 10px 2px 5px;
-}
-#search-result td:first-child + td + td + td {
-    font-size: 10px;
-    padding: 5px 5px 2px 5px;
-}
-#search-result td:first-child + td + td + td span {
-    cursor: pointer;
-}
-#search-result td:first-child + td + td + td span:hover {
-    text-decoration: underline;
 }
 
 /*= Settings Tab

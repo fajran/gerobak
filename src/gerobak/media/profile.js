@@ -52,6 +52,7 @@ var ph = {
                 var item = items[i];
                 if ((item.length > 0) && (this.packages.indexOf(item) == -1)) {
                     this.packages.push(item);
+                    ph.search.mark(item);
                 }
             }
         },
@@ -60,11 +61,13 @@ var ph = {
             var pos = this.packages.indexOf(pkg);
             if (pos >= 0) {
                 this.packages.splice(pos, 1);
+                ph.search.unmark(pkg);
             }
         },
 
         _clear: function() {
             this.packages = [];
+            ph.search.update_marks();
         },
 
         update_list: function() {
@@ -319,26 +322,58 @@ var ph = {
                     var desc = items[i][1];
                     var pkglink = create_show_package_link(pkg);
                     var addlink = '';
+                    var checked = 'checked="checked"';
                     if (ph.install.packages.indexOf(pkg) == -1) {
-                        addlink = '<span onclick="profile.search.add(this, \''+pkg+'\')">mark</span>';
+                        checked = '';
                     }
-                    else {
-                        addlink = '<span onclick="profile.search.remove(this, \''+pkg+'\')">unmark</span>';
-                    }
-                    table.append('<tr><td>'+(i+1)+'</td><td>'+pkglink+'</td><td>'+desc+'</td><td>'+addlink+'</td></tr>');
+                    var check = '<input type="checkbox" '+checked+'" onclick="profile.search.toggle(this, \''+pkg+'\')" rel="'+pkg+'"/>';
+                    table.append('<tr><td>'+check+'</td><td>'+pkglink+'</td><td>'+desc+'</td></tr>');
                 }
             }
             obj.show();
         },
 
-        add: function(src, pkg) {
-            ph.install.add(pkg);
-            $(src).parent().html('<span onclick="profile.search.remove(this, \''+pkg+'\')">unmark</span>');
+        toggle: function(src, pkg) {
+            if (src.checked) {
+                this._skip = true;
+                ph.install.add(pkg);
+            }
+            else {
+                this._skip = true;
+                ph.install.remove(pkg);
+            }
         },
 
-        remove: function(src, pkg) {
-            ph.install.remove(pkg);
-            $(src).parent().html('<span onclick="profile.search.add(this, \''+pkg+'\')">mark</span>');
+        mark: function(pkg, checked) {
+            if (checked == undefined) {
+                checked = true;
+            }
+
+            var obj = $('#search-result table.search');
+            var check = obj.find('input[type="checkbox"][rel="'+pkg+'"]');
+            if (check.length > 0) {
+                check[0].checked = checked;
+            }
+        },
+
+        unmark: function(pkg) {
+            this.mark(pkg, false);
+        },
+
+        update_marks: function() {
+            if (this._skip == true) { this._skip = false; return; }
+            var obj = $('#search-result table.search');
+            var items = obj.find('input[type="checkbox"]');
+            var len = items.length;
+            for (var i=0; i<len; i++) {
+                items[i].checked = false;
+            }
+
+            var pkgs = ph.install.packages;
+            len = pkgs.length;
+            for (var i=0; i<len; i++) {
+                this.mark(pkgs[i]);
+            }
         },
 
         start: function(f) {
