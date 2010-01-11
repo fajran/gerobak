@@ -320,10 +320,10 @@ var ph = {
                     var pkglink = create_show_package_link(pkg);
                     var addlink = '';
                     if (ph.install.packages.indexOf(pkg) == -1) {
-                        addlink = '<span onclick="profile.search.add(this, \''+pkg+'\')">add</span>';
+                        addlink = '<span onclick="profile.search.add(this, \''+pkg+'\')">mark</span>';
                     }
                     else {
-                        addlink = '<span>added</span>';
+                        addlink = '<span onclick="profile.search.remove(this, \''+pkg+'\')">unmark</span>';
                     }
                     table.append('<tr><td>'+(i+1)+'</td><td>'+pkglink+'</td><td>'+desc+'</td><td>'+addlink+'</td></tr>');
                 }
@@ -333,7 +333,12 @@ var ph = {
 
         add: function(src, pkg) {
             ph.install.add(pkg);
-            $(src).parent().html('<span>added</span>');
+            $(src).parent().html('<span onclick="profile.search.remove(this, \''+pkg+'\')">unmark</span>');
+        },
+
+        remove: function(src, pkg) {
+            ph.install.remove(pkg);
+            $(src).parent().html('<span onclick="profile.search.add(this, \''+pkg+'\')">mark</span>');
         },
 
         start: function(f) {
