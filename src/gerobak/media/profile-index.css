@@ -1,0 +1,54 @@
+.profile table.profiles th {
+    font-weight: bold;
+    font-size: 12px;
+    text-align: center;
+    padding: 2px 10px;
+    background: #918C81;
+    border-bottom: 1px solid #888;
+}
+.profile table.profiles td {
+    padding: 5px 15px 5px 10px;
+    font-size: 14px;
+    border-bottom: 1px solid #888;
+}
+.profile table.profiles td:first-child { 
+    min-width: 100px;
+}
+.profile table.profiles td:first-child + td + td {
+    min-width: 300px;
+}
+.profile table.profiles td:first-child + td {
+    text-align: center;
+}
+.profile table.profiles td {
+    border-left: 1px dotted #888;
+}
+.profile table td:first-child {
+    border-left: 0px;
+}
+.profile table.profiles a {
+    color: black;
+    text-decoration: underline;
+}
+
+.profile .add h3 {
+    font-weight: bold;
+    margin: 40px 0 10px 0;
+}
+
+.profile .add form {
+    width: 360px;
+}
+.profile .add form label {
+    float: left;
+    width: 100px;
+    padding-right: 10px;
+    text-align: right;
+}
+.profile .add form input[type="text"] {
+    width: 250px;
+}
+.profile .add form input[type="submit"] {
+    float: right;
+}
+
