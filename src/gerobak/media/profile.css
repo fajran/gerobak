@@ -9,6 +9,16 @@
     padding: 1.6em 1.4em;
 }
 
+div.loader {
+    padding: 50px 20px;
+    text-align: center;
+    color: #444;
+}
+div.loader img {
+    vertical-align: middle;
+    margin-right: 3px;
+}
+
 /*= Package Info Dialog
  */
 
@@ -190,11 +200,13 @@
     visibility: visible;
 }
 
-.install-result {
+#install-result, #upgrade-result {
     border-top: 1px solid #888;
     margin-top: 15px;
     padding-top: 15px;
+    display: none;
 }
+
 .install-result strong {
     font-weight: bold;
 }
@@ -249,6 +261,12 @@
 }
 .install-result .head {
     margin-top: 20px;
+}
+.install-result .main li {
+    margin-bottom: 2px;
+}
+.install-result .main li a:hover {
+    text-decoration: none;
 }
 
 /*= Upgrade Tab

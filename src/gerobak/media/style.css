@@ -7,6 +7,10 @@ html {
     background: #F0E9E2;
 }
 
+br.clear {
+    clear: both;
+}
+
 #header {
     padding: 10px;
     background: #383A3B;
@@ -44,6 +48,10 @@ html {
 }
 #content p {
     margin-bottom: 5px;
+}
+
+.ui-widget-overlay {
+    position: fixed;
 }
 
 /*

@@ -32,6 +32,15 @@ function setup_copy_to_clipboard(obj, urls) {
     });
 }
 
+function show_loader(obj, text) {
+    if (text == undefined) {
+        text = 'loading..';
+    }
+
+    obj.html('<div class="loader"><p><img src="/media/img/loader.gif"/> <span>'+text+'</span></p></div>');
+    obj.show();
+}
+
 var ph = {
     install: {
         packages: [],
@@ -207,12 +216,14 @@ var ph = {
                 side.html(html);
             }
 
+            obj.append('<br class="clear"/>');
             obj.show();
         },
 
         start: function() {
             var packages = this.packages.join(" ");
             var self = this;
+            show_loader($('#install-result'));
             $.ajax({
                 type: 'POST',
                 url: 'install/?format=json',
@@ -236,10 +247,12 @@ var ph = {
         dialog.find('pre').html('');
         dialog.find('table').html('');
         dialog.dialog('open');
+        show_loader(dialog);
         $.getJSON('show/'+pkg+'/?format=json', function(data, stat) {
-            console.log('stat:', stat);
-            dialog.find('p.desc').text(data.data.sdesc);
-            dialog.find('pre.desc').text(data.data.desc);
+            var html = '';
+            html += '<p class="desc">'+data.data.sdesc+'</p>';
+            html += '<pre class="desc">'+data.data.desc+'</pre>';
+            html += '<table>';
 
             var table = dialog.find('table');
             var info = data.data.data;
@@ -248,9 +261,13 @@ var ph = {
                 var key = info[i][0];
                 var value = htmlentities(info[i][1]);
                 if (key != 'Description') {
-                    table.append('<tr><td>'+key+'</td><td>'+value+'</td></tr>');
+                    html += '<tr><td>'+key+'</td><td>'+value+'</td></tr>';
                 }
             }
+            html += '</table>';
+
+            dialog.html(html);
+
             dialog.dialog('option', 'position', ['center', 25]);
             dialog.dialog('option', 'title', data.data.package);
         });
@@ -300,6 +317,7 @@ var ph = {
         start: function(f) {
             var query = f.packages.value;
             var self = this;
+            show_loader($('#search-result'));
             $.ajax({
                 type: 'POST',
                 url: 'search/?format=json',
@@ -328,6 +346,7 @@ var ph = {
         },
 
         _start: function(path) {
+            show_loader($('#upgrade-result'));
             $.ajax({
                 type: 'POST',
                 url: path + '/?format=json',
