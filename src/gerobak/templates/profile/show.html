@@ -67,7 +67,7 @@
     <li><a href="#upgrade">Upgrade</a></li>
     </ul>
     <div id="search">
-        <form method="post" action="search/" onsubmit="return submit_search(this)">
+        <form method="post" action="search/" onsubmit="profile.search.start(this); return false;">
         <p><label for="id_packages">Packages:</label>
             {{ search.packages }}
             <input type="submit" value="search"/>
@@ -76,20 +76,21 @@
         <div id="search-result"></div>
     </div>
     <div id="install">
-        <form method="post" action="install/">
-        <p><label for="id_packages">Packages:</label>
-            {{ install.packages }}
-            <input type="submit" value="install"/>
-        </p>
+        <form onsubmit="profile.install.add_form(); return false;">
+        <p><label>Package:</label> <input type="text" id="install-package-add"/> 
+        <input type="submit" value="add"/> 
+        <input type="button" value="clear" onclick="profile.install.clear()"/></p>
         </form>
+        <ul id="install-package-list"></ul>
+        <div id="install-package-button"><input type="button" value="install" onclick="profile.install.start()"/></div>
         <div id="install-result"></div>
     </div>
     <div id="upgrade">
-        <form method="post" action="upgrade/" onsubmit="return submit_upgrade();">
+        <form method="post" action="upgrade/" onsubmit="profile.upgrade.start(); return false;">
         <input type="submit" value="upgrade"/>
         </form>
         
-        <form method="post" action="dist-upgrade/" onsubmit="return submit_dist_upgrade();">
+        <form method="post" action="dist-upgrade/" onsubmit="profile.dist_upgrade.start(); return false;">
         <input type="submit" value="dist-upgrade"/>
         </form>
         <div id="upgrade-result"></div>
@@ -132,4 +133,9 @@ description</pre>
 
 {% block extrahead %}
 <script type="text/javascript" src="/media/profile.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    profile.init();
+});
+</script>
 {% endblock %}
