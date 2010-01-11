@@ -264,7 +264,13 @@ var ph = {
                 else {
                     pkg = data.data.package;
 
+                    var checked = '';
+                    if (ph.install.packages.indexOf(pkg) >= 0) {
+                        checked = 'checked="checked"';
+                    }
+
                     var html = '';
+                    html += '<p class="mark"><input type="checkbox" '+checked+' onclick="profile.search.toggle(this, \''+pkg+'\')"/> marked</p>';
                     html += '<p class="desc">'+data.data.sdesc+'</p>';
                     html += '<pre class="desc">'+data.data.desc+'</pre>';
                     html += '<table>';
