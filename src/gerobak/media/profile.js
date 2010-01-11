@@ -251,6 +251,7 @@ var ph = {
         $.ajax({
             url: 'show/'+pkg+'/?format=json',
             method: 'GET',
+            dataType: 'json',
             success: function(data, stat) {
                 if (data.data.package == null) {
                     var html = '';
