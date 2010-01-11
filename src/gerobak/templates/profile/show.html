@@ -147,10 +147,12 @@ description</pre>
 
 {% block extrahead %}
 <link rel="stylesheet" type="text/css" href="/media/profile.css"/>
+<script type="text/javascript" src="/media/zeroclipboard/ZeroClipboard.js"></script>
 <script type="text/javascript" src="/media/profile.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
     profile.init();
+    ZeroClipboard.setMoviePath('/media/zeroclipboard/ZeroClipboard.swf');
 });
 </script>
 {% endblock %}

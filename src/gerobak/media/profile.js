@@ -1,7 +1,35 @@
 (function() {
 
+var clip = new ZeroClipboard.Client();
+clip.setHandCursor(true);
+
 function create_show_package_link(pkg) {
     return '<a href="show/'+pkg+'/" onclick="profile.show(\''+pkg+'\'); return false;">'+pkg+'</a>';
+}
+
+function setup_copy_to_clipboard(obj, urls) {
+    var items = [];
+    var len = urls.length;
+    for (var i=0; i<len; i++) {
+        items.push($(urls[i]).text());
+    }
+    obj.data('urls', items.join("\n"));
+
+    obj.mouseover(function() {
+        clip.setText($(this).data('urls'));
+        if (clip.div) {
+            clip.receiveEvent('mouseout', null);
+            clip.reposition(this);
+        }
+        else {
+            clip.glue(this);
+        }
+        clip.receiveEvent('mouseover', null);
+        var self = this;
+        clip.addEventListener('onComplete', function() {
+            $(self).text('Copied!');
+        });
+    });
 }
 
 var ph = {
@@ -148,7 +176,8 @@ var ph = {
                 if (data.urls.length > 0) {
                     html = '';
                     html += '<h3>URLs</h3>';
-                    html += '<ul>';
+                    html += '<p class="copy"> &mdash; <span>copy to clipboard</span></p>';
+                    html += '<ul class="urls">';
         
                     var len = data.urls.length;
                     for (var i=0; i<len; i++) {
@@ -163,6 +192,8 @@ var ph = {
         
                     html += '</ul>';
                     main.html(html);
+
+                    setup_copy_to_clipboard(main.find('p.copy span'), main.find('ul.urls li'));
                 }
         
                 // install
