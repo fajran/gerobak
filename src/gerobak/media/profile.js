@@ -395,32 +395,8 @@ var ph = {
         $('#dialog-package-show').dialog('option', 'maxHeight', 500);
     },
 
-    _tab_history_handler: function(hash) {
-        console.log('hash:', hash);
-        if (hash == '') {
-            $('.tabs').tabs('select', 0);
-        }
-        else {
-            $('.tabs').tabs('select', '#'+hash);
-        }
-    },
-
     _init_tabs: function() {
         $('.tabs').tabs();
-        $.historyInit(this._tab_history_handler);
-        $('.tabs').bind('tabsshow', function(ev, ui) {
-            var skip = false;
-            if (location.hash == '') {
-                var href = $('.tabs > ul > li > a:eq(0)').attr('href');
-                if ('#'+ui.panel.id == href) {
-                    skip = true;
-                }
-            }
-
-            if (!skip) {
-                $.historyLoad(ui.panel.id);
-            }
-        });
     }
 }
 
