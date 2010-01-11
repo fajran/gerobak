@@ -244,11 +244,6 @@ var ph = {
 
     show: function(pkg) {
         var dialog = $('#dialog-package-show');
-        dialog.find('h3').text(pkg);
-        dialog.find('div').text('');
-        dialog.find('p').text('');
-        dialog.find('pre').html('');
-        dialog.find('table').html('');
         dialog.dialog('open');
         show_loader(dialog);
         $.ajax({
