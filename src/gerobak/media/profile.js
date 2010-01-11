@@ -248,37 +248,49 @@ var ph = {
         dialog.find('table').html('');
         dialog.dialog('open');
         show_loader(dialog);
-        $.getJSON('show/'+pkg+'/?format=json', function(data, stat) {
-            if (data.data.package == null) {
-                var html = '';
-                html += '<div class="notfound"><p>No package information for <strong>'+pkg+'</strong></p></div>';
-                dialog.html(html);
-            }
-            else {
-                pkg = data.data.package;
-
-                var html = '';
-                html += '<p class="desc">'+data.data.sdesc+'</p>';
-                html += '<pre class="desc">'+data.data.desc+'</pre>';
-                html += '<table>';
-
-                var table = dialog.find('table');
-                var info = data.data.data;
-                var len = info.length;
-                for (var i=0; i<len; i++) {
-                    var key = info[i][0];
-                    var value = htmlentities(info[i][1]);
-                    if (key != 'Description') {
-                        html += '<tr><td>'+key+'</td><td>'+value+'</td></tr>';
-                    }
+        $.ajax({
+            url: 'show/'+pkg+'/?format=json',
+            method: 'GET',
+            success: function(data, stat) {
+                if (data.data.package == null) {
+                    var html = '';
+                    html += '<div class="notfound"><p>No package information for <strong>'+pkg+'</strong></p></div>';
+                    dialog.html(html);
                 }
-                html += '</table>';
+                else {
+                    pkg = data.data.package;
 
-                dialog.html(html);
-            }
+                    var html = '';
+                    html += '<p class="desc">'+data.data.sdesc+'</p>';
+                    html += '<pre class="desc">'+data.data.desc+'</pre>';
+                    html += '<table>';
 
-            dialog.dialog('option', 'position', ['center', 25]);
-            dialog.dialog('option', 'title', pkg);
+                    var table = dialog.find('table');
+                    var info = data.data.data;
+                    var len = info.length;
+                    for (var i=0; i<len; i++) {
+                        var key = info[i][0];
+                        var value = htmlentities(info[i][1]);
+                        if (key != 'Description') {
+                            html += '<tr><td>'+key+'</td><td>'+value+'</td></tr>';
+                        }
+                    }
+                    html += '</table>';
+
+                    dialog.html(html);
+                }
+
+                dialog.dialog('option', 'position', ['center', 25]);
+                dialog.dialog('option', 'title', pkg);
+            },
+
+            error: function(xhr, stat, err) {
+                if (xhr.status == 404) {
+                    var html = '';
+                    html += '<div class="notfound"><p>Package not found: <strong>'+pkg+'</strong></p></div>';
+                    dialog.html(html);
+                }
+            },
         });
     },
 
