@@ -27,7 +27,10 @@ function setup_copy_to_clipboard(obj, urls) {
         clip.receiveEvent('mouseover', null);
         var self = this;
         clip.addEventListener('onComplete', function() {
-            $(self).text('Copied!');
+            $(self).text('copied!');
+        });
+        clip.addEventListener('onMouseOut', function() {
+            $(self).text('copy to clipboard');
         });
     });
 }
