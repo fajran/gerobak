@@ -103,7 +103,7 @@
             {% else %}
             <p><span class="label">Last update:</span> Never</p>
             {% endif %}
-            <form method="post" action="update/">
+            <form method="post" action="update/" onsubmit="profile.update.start(this); return false;">
             <p class="cmd"><input type="submit" value="Update Repository"/></p>
             </form>
             </div>

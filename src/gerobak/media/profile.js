@@ -342,6 +342,27 @@ var ph = {
         }
     },
 
+    update: {
+        start: function(sender) {
+            var btn = $(sender).find('input[type="submit"]');
+            btn.attr('disabled', 'disabled');
+            btn.after('<span class="loader"><img src="/media/img/loader.gif"/> updating..</span>');
+
+            $.ajax({
+                type: 'POST',
+                url: 'update/',
+                dataType: 'text',
+                complete: function(xhr, stat) {
+                },
+                success: function(data, stat) {
+                    btn.attr('disabled', '');
+                    console.log(window.location.href);
+                    window.location.reload();
+                },
+            });
+        }
+    },
+
     init: function() {
         this._init_dialogs();
         this._init_tabs();
