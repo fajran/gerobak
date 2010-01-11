@@ -1,5 +1,9 @@
 (function() {
 
+function create_show_package_link(pkg) {
+    return '<a href="show/'+pkg+'/" onclick="profile.show(\''+pkg+'\'); return false;">'+pkg+'</a>';
+}
+
 var ph = {
     install: {
         packages: [],
@@ -27,20 +31,22 @@ var ph = {
         },
 
         update_list: function() {
-            var obj = $('#install-package-list');
+            var obj = $('#install-package-list ul');
             var html = '';
             var len = this.packages.length;
             for (var i=0; i<len; i++) {
                 var pkg = this.packages[i];
-                html += '<li><span onclick="profile.show(\''+pkg+'\')">'+pkg+'</span>';
+                html += '<li>'+create_show_package_link(pkg);
                 html += '<sup onclick="profile.install.remove(\''+pkg+'\')">x</sup></li> ';
             }
             obj.html(html);
             if (len > 0) {
                 $('#install-package-button').show();
+                $('#install-package-list').show();
             }
             else {
                 $('#install-package-button').hide();
+                $('#install-package-list').hide();
             }
         },
 
@@ -74,11 +80,12 @@ var ph = {
             var html = '';
             html += '<div class="pkgs"><h3>'+title+'</h3>';
             
-            html += '<p><span onclick="profile.show(\''+items[0]+'\')">'+items[0]+'</span>';
-            for (var i=1; i<len; i++) {
-                html += ', <span onclick="profile.show(\''+items[i]+'\')">'+items[i]+'</span>';
+            var list = [];
+            for (var i=0; i<len; i++) {
+                list.push(create_show_package_link(items[i]));
             }
-            html += '</p>';
+
+            html += '<p>' + list.join(', ') + '</p>';
         
             html += '</div>';
             return html;
@@ -89,42 +96,87 @@ var ph = {
                 target = '#install-result';
             }
         
-            var data = data.data;
             var obj = $(target);
-            obj.html('<div class="install-result"><div class="side"></div><div class="main"></div></div>');
-        
-            var side = obj.find('.side');
-            var main = obj.find('.main');
-        
+            var type = data.type;
+            var data = data.data;
             var html = '';
-        
-            // URL list
-            html += '<h3>URLs</h3>';
-            html += '<ul>';
-        
-            var len = data.urls.length;
-            for (var i=0; i<len; i++) {
-                var item = data.urls[i];
-                var url = item[0];
-                var deb = item[1];
-                var size = item[2];
-                var hash = item[3];
-                var hash_format = item[4];
-                html += '<li>'+i+' <a href="'+url+'">'+url+'</a></li>';
+
+            obj.html('<div class="install-result"></div>');
+            obj = obj.find('.install-result');
+
+            var pkgs = data.packages.join(' ');
+
+            if (type == 'install') {
+                html += '<p>Installation result for <strong>'+pkgs+'</strong>:</p>';
+            }
+            else if (type == "upgrade") {
+                html += '<p>Result of <strong>upgrade</strong> operation:</p>';
+            }
+            else if (type == "dist-upgrade") {
+                html += '<p>Result of <strong>dist-upgrade</strong> operation:</p>';
             }
         
-            html += '</ul>';
-            main.html(html);
+            if (data.errors.length > 0) {
+                html += '<div class="error"><p><span>Unable to install.</span> Error messages:</p></ul>';
+                var len = data.errors.length;
+                for (var i=0; i<len; i++) {
+                    html += '<li>'+data.errors[i]+'</li>';
+                }
+                html += '</ul></div>';
+                obj.html(html);
+            }
+            else {
+                html += '<div class="head"></div><div class="side"></div><div class="main"></div>';
+                obj.html(html);
+
+                var head = obj.find('.head');
+                var side = obj.find('.side');
+                var main = obj.find('.main');
+
+                // Already the newest version
+                if (data.newest.length > 0) {
+                    var items = [];
+                    var len = data.newest.length;
+                    for (var i=0; i<len; i++) {
+                        items.push(create_show_package_link(data.newest[i]));
+                    }
+                    html = '<p>Already the newest version: ' + items.join(', ') + '</p>';
+                    head.html(html);
+                }
+
+                // URL list
+                if (data.urls.length > 0) {
+                    html = '';
+                    html += '<h3>URLs</h3>';
+                    html += '<ul>';
         
-            // install
+                    var len = data.urls.length;
+                    for (var i=0; i<len; i++) {
+                        var item = data.urls[i];
+                        var url = item[0];
+                        var deb = item[1];
+                        var size = item[2];
+                        var hash = item[3];
+                        var hash_format = item[4];
+                        html += '<li><a href="'+url+'">'+url+'</a></li>';
+                    }
         
-            html = '';
-            html += this._create_package_list(data.install, 'To Be Installed');
-            html += this._create_package_list(data.upgrade, 'To Be Upgraded');
-            html += this._create_package_list(data.recommended, 'Recommended');
-            html += this._create_package_list(data.suggested, 'Suggested');
+                    html += '</ul>';
+                    main.html(html);
+                }
         
-            side.html(html);
+                // install
+        
+                html = '';
+                html += this._create_package_list(data.install, 'To Be Installed');
+                html += this._create_package_list(data.upgrade, 'To Be Upgraded');
+                html += this._create_package_list(data.recommended, 'Recommended');
+                html += this._create_package_list(data.suggested, 'Suggested');
+        
+                side.html(html);
+            }
+
+            obj.show();
         },
 
         start: function() {
@@ -175,26 +227,38 @@ var ph = {
 
     search: {
     
-        show: function(data) {
+        show: function(query, data) {
             var items = data.data.items;
             var len = items.length;
             var obj = $('#search-result');
-            obj.html('<table class="search"></table>');
-            var table = obj.find('table');
-            table.append('<tr><th></th><th>Package</th><th>Description</th><th></th></tr>');
-            for (var i=0; i<len; i++) {
-                var pkg = items[i][0];
-                var desc = items[i][1];
-                var pkglink = '<a href="show/'+pkg+'/" onclick="profile.show(\''+pkg+'\'); return false;">'+pkg+'</a>';
-                var addlink = '';
-                if (ph.install.packages.indexOf(pkg) == -1) {
-                    addlink = '<span onclick="profile.search.add(this, \''+pkg+'\')">add</span>';
-                }
-                else {
-                    addlink = '<span>added</span>';
-                }
-                table.append('<tr><td>'+(i+1)+'</td><td>'+pkglink+'</td><td>'+desc+'</td><td>'+addlink+'</td></tr>');
+
+            if (len == 0) {
+                var html = '';
+                html += '<p>No package found. Please try another keyword.</p>';
+                obj.html(html);
             }
+            else {
+                var html = '';
+                html += '<p>Search result for <strong>'+query+'</strong>:</p>';
+                html += '<table class="search"></table>';
+                obj.html(html);
+                var table = obj.find('table');
+                table.append('<tr><th></th><th>Package</th><th>Description</th><th></th></tr>');
+                for (var i=0; i<len; i++) {
+                    var pkg = items[i][0];
+                    var desc = items[i][1];
+                    var pkglink = create_show_package_link(pkg);
+                    var addlink = '';
+                    if (ph.install.packages.indexOf(pkg) == -1) {
+                        addlink = '<span onclick="profile.search.add(this, \''+pkg+'\')">add</span>';
+                    }
+                    else {
+                        addlink = '<span>added</span>';
+                    }
+                    table.append('<tr><td>'+(i+1)+'</td><td>'+pkglink+'</td><td>'+desc+'</td><td>'+addlink+'</td></tr>');
+                }
+            }
+            obj.show();
         },
 
         add: function(src, pkg) {
@@ -203,19 +267,19 @@ var ph = {
         },
 
         start: function(f) {
-            var packages = f.packages.value;
+            var query = f.packages.value;
             var self = this;
             $.ajax({
                 type: 'POST',
                 url: 'search/?format=json',
                 dataType: 'json',
-                data: {packages: packages},
+                data: {packages: query},
                 complete: function(xhr, stat) {
                     console.log('complete');
                     console.log('stat:', stat);
                 },
                 success: function(data, stat) {
-                    self.show(data);
+                    self.show(query, data);
                 }
             });
         }

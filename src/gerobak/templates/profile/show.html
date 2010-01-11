@@ -12,7 +12,6 @@
 </div></div>
 {% endif %}
 
-<div id="side">
 <div class="title">
 <h2>{{ profile.name }}</h2>
 {% if profile.desc %}
@@ -20,55 +19,19 @@
 {% endif %}
 </div>
 
-<fieldset id="status" class="sideblock">
-    <legend>Status File</legend>
-    {% if profile.status_updated %}
-    <p><span class="label">Last update:</span> {{ profile.status_updated|date:"j M y H:i" }}</p>
-    {% else %}
-    <p><span class="label">Last update:</span> Never</p>
-    {% endif %}
-    <p><span class="label">Size:</span> {{ profile.status_size|default_if_none:"Unknown" }}</p>
-    <p><span class="label">MD5 Hash:</span> <code class="md5">{{ profile.status_hash|default_if_none:"Unknown" }}</code></p>
-    <p class="cmd"><button onclick="show_dialog('#dialog-status-upload')">upload status file</button></p>
-    <p class="cmd"><button onclick="show_dialog('#dialog-status-predefined')">use prefedined status file</button></p>
-</fieldset>
-
-<fieldset id="sources" class="sideblock">
-    <legend>Software Sources</legend>
-    {% if profile.sources_updated %}
-    <p><span class="label">Last update:</span> {{ profile.sources_updated|date:"j M y H:i" }}</p>
-    {% else %}
-    <p><span class="label">Last update:</span> Never</p>
-    {% endif %}
-    <p><span class="label">Total:</span> {{ profile.sources_total|default_if_none:"0" }}</p>
-    <p class="cmd"><button onclick="show_dialog('#dialog-sources')">view/edit sources</button></p>
-</fieldset>
-
-<fieldset id="update" class="sideblock">
-    <legend>Update Repository</legend>
-    {% if profile.repo_updated %}
-    <p><span class="label">Last update:</span> {{ profile.repo_updated|date:"j M y H:i" }}</p>
-    {% else %}
-    <p><span class="label">Last update:</span> Never</p>
-    {% endif %}
-    <form method="post" action="update/">
-    <p class="cmd"><input type="submit" value="Update Repository"/></p>
-    </form>
-</fieldset>
-
-</div>
-
-<div id="center">
-
 <div class="tabs">
     <ul>
+    {% if profile.repo_updated %}
     <li><a href="#search">Search</a></li>
     <li><a href="#install">Install</a></li>
     <li><a href="#upgrade">Upgrade</a></li>
+    {% endif %}
+    <li><a href="#settings">Settings</a></li>
     </ul>
+    {% if profile.repo_updated %}
     <div id="search">
         <form method="post" action="search/" onsubmit="profile.search.start(this); return false;">
-        <p><label for="id_packages">Packages:</label>
+        <p><label for="id_packages">Keyword:</label>
             {{ search.packages }}
             <input type="submit" value="search"/>
         </p>
@@ -77,11 +40,14 @@
     </div>
     <div id="install">
         <form onsubmit="profile.install.add_form(); return false;">
-        <p><label>Package:</label> <input type="text" id="install-package-add"/> 
-        <input type="submit" value="add"/> 
-        <input type="button" value="clear" onclick="profile.install.clear()"/></p>
+        <div><label>Add package:</label> 
+            <div><input type="text" id="install-package-add"/> 
+            <input type="submit" value="add"/> 
+            <input type="button" value="clear" onclick="profile.install.clear()"/>
+            </div>
+        </div>
         </form>
-        <ul id="install-package-list"></ul>
+        <div id="install-package-list"><p>Packages: </p><ul></ul></div>
         <div id="install-package-button"><input type="button" value="install" onclick="profile.install.start()"/></div>
         <div id="install-result"></div>
     </div>
@@ -95,15 +61,63 @@
         </form>
         <div id="upgrade-result"></div>
     </div>
-</div>
+    {% endif %}
+    <div id="settings">
 
-</div> <!-- end: center -->
+        <div id="status" class="block">
+            <h3>Status File</h3>
+            <div>
+            {% if profile.status_updated %}
+            <p><span class="label">Last update:</span> {{ profile.status_updated|date:"j M y H:i" }}</p>
+            {% else %}
+            <p><span class="label">Last update:</span> Never</p>
+            {% endif %}
+            <p><span class="label">Size:</span> {{ profile.status_size|default_if_none:"Unknown" }}</p>
+            <p><span class="label">MD5 Hash:</span> <code class="md5">{{ profile.status_hash|default_if_none:"Unknown" }}</code></p>
+            <p class="cmd"><span onclick="show_dialog('#dialog-status-upload')">upload status file</span>
+                <!--
+                <span onclick="show_dialog('#dialog-status-predefined')">use prefedined status file</span>
+                -->
+            </p>
+            </div>
+        </div>
+        
+        <div id="sources" class="block">
+            <h3>Software Sources</h3>
+            <div>
+            {% if profile.sources_updated %}
+            <p><span class="label">Last update:</span> {{ profile.sources_updated|date:"j M y H:i" }}</p>
+            {% else %}
+            <p><span class="label">Last update:</span> Never</p>
+            {% endif %}
+            <p><span class="label">Total:</span> {{ profile.sources_total|default_if_none:"0" }}</p>
+            <p class="cmd"><span onclick="show_dialog('#dialog-sources')">view/edit sources</span></p>
+            </div>
+        </div>
+        
+        <div id="update" class="block">
+            <h3>Update Repository</h3>
+            <div>
+            {% if profile.repo_updated %}
+            <p><span class="label">Last update:</span> {{ profile.repo_updated|date:"j M y H:i" }}</p>
+            {% else %}
+            <p><span class="label">Last update:</span> Never</p>
+            {% endif %}
+            <form method="post" action="update/">
+            <p class="cmd"><input type="submit" value="Update Repository"/></p>
+            </form>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 <div class="dialog" id="dialog-status-upload" title="Upload Status File">
 <p>This file is located at <code>/var/lib/dpkg/status</code> in your
 machine.</p> 
-<p>You can upload the gzip (<code>.gz</code>) or bzip2 (<code>.bz2</code>)
-compressed file.</p>
+<p>You can also upload the 
+    gzip (<code>.gz</code>) or bzip2 (<code>.bz2</code>) 
+    compressed version of the file.</p>
 <form method="post" action="status/" enctype="multipart/form-data">
 {{ upload.as_p }}
 <p><input type="submit" value="Upload"/></p>
@@ -132,6 +146,7 @@ description</pre>
 {% endblock %}
 
 {% block extrahead %}
+<link rel="stylesheet" type="text/css" href="/media/profile.css"/>
 <script type="text/javascript" src="/media/profile.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {

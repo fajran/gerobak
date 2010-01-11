@@ -1,0 +1,239 @@
+.title h2, .title p {
+    display: inline;
+}
+.title {
+    padding-left: 15px;
+    margin: 5px 0 20px;
+}
+
+.ui-tabs .ui-tabs-panel {
+    padding: 1.6em 1.4em;
+}
+
+/*= Package Info Dialog
+ */
+
+#dialog-package-show p.desc {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+#dialog-package-show pre.desc {
+    font-size: 12px;
+}
+#dialog-package-show table {
+    margin-top: 10px;
+    font-size: 12px;
+}
+#dialog-package-show table td {
+    padding: 2px 0;
+}
+#dialog-package-show table td:first-child {
+    padding-right: 15px;
+    color: #444;
+}
+
+/*= Status File and Software Sources Dialogs
+ */
+
+.dialog p {
+    margin-bottom: 10px;
+}
+
+#dialog-sources textarea {
+    width: 470px;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+/*= Search Tab
+ */
+
+#search {
+    
+}
+#search form {
+    margin-bottom: 20px;
+}
+#search strong {
+    font-weight: bold;
+}
+#search-result {
+    border-top: 1px solid #888;
+    padding-top: 15px;
+    display: none;
+}
+#search-result table {
+    margin-top: 10px;
+    font-size: 13px;
+}
+#search-result th {
+    text-align: center;
+    font-weight: bold;
+    font-size: 12px;
+    padding: 2px;
+    background: #bbb;
+}
+#search-result td {
+    padding: 3px 15px 3px 10px;
+}
+#search-result tr:nth-child(odd) {
+    background: #ddd;
+}
+#search-result tr:hover {
+    background: #FFF3A8;
+}
+#search-result td:first-child {
+    font-size: 10px;
+    text-align: right;
+    padding: 5px 10px 2px 5px;
+}
+#search-result td:first-child + td + td + td {
+    font-size: 10px;
+    padding: 5px 5px 2px 5px;
+}
+#search-result td:first-child + td + td + td span {
+    cursor: pointer;
+}
+#search-result td:first-child + td + td + td span:hover {
+    text-decoration: underline;
+}
+
+/*= Settings Tab
+ */
+
+#settings div.block {
+    margin-bottom: 20px;
+    border-top: 1px solid #aaa;
+    padding-top: 15px;
+    clear: both;
+}
+#settings div.block:first-child {
+    border-top: 0px;
+    padding-top: 0px;
+}
+#settings h3 {
+    font-weight: bold;
+    margin-bottom: 10px;
+    float: left;
+    width: 140px;
+}
+#settings div.block > div {
+    margin-left: 150px;
+}
+#settings .cmd {
+    margin-top: 20px;
+}
+#settings .cmd span {
+    cursor: pointer;
+    text-decoration: underline;
+    margin-right: 15px;
+}
+
+/*= Install Tab
+ */
+
+#install form label {
+    display: block;
+    float: left;
+}
+#install form label + div {
+    margin-left: 100px;
+}
+
+#install-package-button {
+    display: none;
+    clear: both;
+    margin-left: 100px;
+    margin-top: 10px;
+}
+#install-package-list {
+    clear: both;
+    display: none;
+    margin-top: 10px;
+}
+#install-package-list p {
+    float: left;
+    width: 100px;
+}
+#install-package-list ul {
+    margin-left: 100px;
+}
+#install-package-list li {
+    display: inline;
+}
+#install-package-list span {
+    cursor: pointer;
+    text-decoration: underline;
+}
+#install-package-list span:hover {
+    text-decoration: none;
+}
+#install-package-list sup {
+    vertical-align: 3px;
+    padding-left: 2px;
+    font-size: 12px;
+    cursor: pointer;
+    visibility: hidden;
+}
+#install-package-list sup:hover {
+    text-decoration: underline;
+}
+#install-package-list li:hover sup {
+    visibility: visible;
+}
+
+.install-result {
+    border-top: 1px solid #888;
+    margin-top: 15px;
+    padding-top: 15px;
+}
+.install-result strong {
+    font-weight: bold;
+}
+.install-result .error span {
+    color: red;
+}
+.install-result .error li {
+    list-style: disc;
+    margin-left: 20px;
+}
+
+.install-result .side {
+    width: 200px;
+    float: left;
+    margin-top: 20px;
+}
+.install-result .main {
+    margin-left: 230px;
+    margin-top: 20px;
+}
+
+.install-result h3 {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+.install-result div.pkgs {
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: #444;
+}
+.install-result div.pkgs a {
+    cursor: pointer;
+    text-decoration: none;
+}
+.install-result div.pkgs a:hover {
+    text-decoration: underline;
+}
+.install-result .head {
+    margin-top: 20px;
+}
+
+/*= Upgrade Tab
+ */
+
+#upgrade form {
+    display: inline;
+}
+
+
