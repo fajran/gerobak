@@ -15,6 +15,7 @@ def parse_apt_install(out):
     newest = []
     upgrade = []
     keptback = []
+    errors = []
 
     out2 = out.replace("\n  ", "  ")
     for line in out2.splitlines():
@@ -34,9 +35,11 @@ def parse_apt_install(out):
             upgrade = line.split(':', 1)[1].strip().split()
         elif line.startswith("'"):
             packages.append(_parse_pkg_url(line))
+        elif line.startswith('E:'):
+            errors.append(line.split(' ', 1)[1])
 
     return extra, suggested, recommended, install, packages, newest, \
-           upgrade, keptback
+           upgrade, keptback, errors
 
 def parse_apt_search(out):
     res = []

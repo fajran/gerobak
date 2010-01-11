@@ -128,7 +128,7 @@ def upgrade(request, profile):
     path = utils.get_path(profile.id)
     ret, out, err = apt.upgrade(path)
     
-    return _show_install(out, format)
+    return _show_install(ret, out, err, format, type="upgrade")
 
 @login_required
 @_post
@@ -142,34 +142,46 @@ def dist_upgrade(request, profile):
     path = utils.get_path(profile.id)
     ret, out, err = apt.dist_upgrade(path)
     
-    return _show_install(out, format)
+    return _show_install(ret, out, err, format, type="dist-upgrade")
 
 
-def _show_install(out, format):
+def _show_install(ret, out, err, format, **kwargs):
+    if ret != 0:
+        txt = err
+    else:
+        txt = out
+
     extra, suggested, recommended, install, packages, newest, \
-        upgrade, keptback = parse_apt_install(out)
+        upgrade, keptback, errors = parse_apt_install(txt)
+
+    type = kwargs.get('type', 'install');
+    pkgs = kwargs.get('packages', []);
 
     if format == 'html':
         return render_to_response('profile/install.html',
-                                  {'extra': extra,
+                                  {'packages': pkgs,
+                                   'extra': extra,
                                    'suggested': suggested,
                                    'recommended': recommended,
                                    'install': install,
                                    'urls': packages,
                                    'newest': newest,
                                    'upgrade': upgrade,
-                                   'keptback': keptback})
+                                   'keptback': keptback,
+                                   'errors': errors})
     elif format == 'json':
         data = {'stat': 'ok',
-                'type': 'install',
-                'data': {'extra': extra,
+                'type': type,
+                'data': {'packages': pkgs,
+                         'extra': extra,
                          'suggested': suggested,
                          'recommended': recommended,
                          'install': install,
                          'urls': packages,
                          'newest': newest,
                          'upgrade': upgrade,
-                         'keptback': keptback}}
+                         'keptback': keptback,
+                         'errors': errors}}
         jdata = json.dumps(data)
         return render_to_response('profile/json', {'json': jdata},
                                   mimetype='text/plain')
@@ -189,7 +201,7 @@ def install(request, profile):
         path = utils.get_path(profile.id)
         pkgs, ret, out, err = apt.install(path, packages)
 
-        return _show_install(out, format)
+        return _show_install(ret, out, err, format, packages=pkgs)
     else:
         print "invalid"
         print form.as_p()
