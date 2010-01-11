@@ -82,3 +82,5 @@ GEROBAK_APT_CACHE = '/usr/bin/apt-cache'
 GEROBAK_WORKING_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
                                    'work')
 
+EMAIL_PORT = 1025
+
