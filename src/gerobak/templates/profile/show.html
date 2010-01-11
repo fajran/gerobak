@@ -118,7 +118,7 @@ machine.</p>
 <p>You can also upload the 
     gzip (<code>.gz</code>) or bzip2 (<code>.bz2</code>) 
     compressed version of the file.</p>
-<form method="post" action="status/" enctype="multipart/form-data">
+<form method="post" action="status/" enctype="multipart/form-data" onsubmit="profile.status.start(this);">
 {{ upload.as_p }}
 <p><input type="submit" value="Upload"/></p>
 </form>

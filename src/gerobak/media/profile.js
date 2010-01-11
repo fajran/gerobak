@@ -445,6 +445,17 @@ var ph = {
         }
     },
 
+    status: {
+        start: function(sender) {
+            var btn = $(sender).find('input[type="submit"]');
+            btn.attr('disabled', 'disabled');
+            btn.after('<span class="loader"><img src="/media/img/loader.gif"/> uploading..</span>');
+            $('#dialog-status-upload').bind('dialogbeforeclose', function() {
+                return false;
+            });
+        }
+    },
+
     init: function() {
         this._init_dialogs();
         this._init_tabs();

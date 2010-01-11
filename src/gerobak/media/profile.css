@@ -139,11 +139,13 @@ div.loader img {
     margin-right: 15px;
 }
 
-#update span.loader {
+#update span.loader,
+#dialog-status-upload span.loader {
     color: #444;
     text-decoration: none;
 }
-#update span.loader img {
+#update span.loader img,
+#dialog-status-upload span.loader img {
     vertical-align: middle;
     margin: 0 5px 0 10px;
 }
