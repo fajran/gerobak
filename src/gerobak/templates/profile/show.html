@@ -21,47 +21,13 @@
 
 <div class="tabs">
     <ul>
+    <li><a href="#settings">Status</a></li>
     {% if profile.repo_updated %}
     <li><a href="#search">Search</a></li>
     <li><a href="#install">Install</a></li>
     <li><a href="#upgrade">Upgrade</a></li>
     {% endif %}
-    <li><a href="#settings">Settings</a></li>
     </ul>
-    {% if profile.repo_updated %}
-    <div id="search">
-        <form method="post" action="search/" onsubmit="profile.search.start(this); return false;">
-        <p><label for="id_packages">Keyword:</label>
-            {{ search.packages }}
-            <input type="submit" value="search"/>
-        </p>
-        </form>
-        <div id="search-result"></div>
-    </div>
-    <div id="install">
-        <form onsubmit="profile.install.add_form(); return false;">
-        <div><label>Add package:</label> 
-            <div><input type="text" id="install-package-add"/> 
-            <input type="submit" value="add"/> 
-            <input type="button" value="clear" onclick="profile.install.clear()"/>
-            </div>
-        </div>
-        </form>
-        <div id="install-package-list"><p>Packages: </p><ul></ul></div>
-        <div id="install-package-button"><input type="button" value="install" onclick="profile.install.start()"/></div>
-        <div id="install-result"></div>
-    </div>
-    <div id="upgrade">
-        <form method="post" action="upgrade/" onsubmit="profile.upgrade.start(); return false;">
-        <input type="submit" value="upgrade"/>
-        </form>
-        
-        <form method="post" action="dist-upgrade/" onsubmit="profile.dist_upgrade.start(); return false;">
-        <input type="submit" value="dist-upgrade"/>
-        </form>
-        <div id="upgrade-result"></div>
-    </div>
-    {% endif %}
     <div id="settings">
 
         <div id="status" class="block">
@@ -110,6 +76,40 @@
         </div>
 
     </div>
+    {% if profile.repo_updated %}
+    <div id="search">
+        <form method="post" action="search/" onsubmit="profile.search.start(this); return false;">
+        <p><label for="id_packages">Keyword:</label>
+            {{ search.packages }}
+            <input type="submit" value="search"/>
+        </p>
+        </form>
+        <div id="search-result"></div>
+    </div>
+    <div id="install">
+        <form onsubmit="profile.install.add_form(); return false;">
+        <div><label>Add package:</label> 
+            <div><input type="text" id="install-package-add"/> 
+            <input type="submit" value="add"/> 
+            <input type="button" value="clear" onclick="profile.install.clear()"/>
+            </div>
+        </div>
+        </form>
+        <div id="install-package-list"><p>Packages: </p><ul></ul></div>
+        <div id="install-package-button"><input type="button" value="install" onclick="profile.install.start()"/></div>
+        <div id="install-result"></div>
+    </div>
+    <div id="upgrade">
+        <form method="post" action="upgrade/" onsubmit="profile.upgrade.start(); return false;">
+        <input type="submit" value="upgrade"/>
+        </form>
+        
+        <form method="post" action="dist-upgrade/" onsubmit="profile.dist_upgrade.start(); return false;">
+        <input type="submit" value="dist-upgrade"/>
+        </form>
+        <div id="upgrade-result"></div>
+    </div>
+    {% endif %}
 </div>
 
 <div class="dialog" id="dialog-status-upload" title="Upload Status File">
