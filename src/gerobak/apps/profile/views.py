@@ -370,6 +370,7 @@ def index(request):
 
             path = utils.get_path(profile.id)
             utils.prepare_profile_dir(path)
+            utils.configure_profile(path, arch=profile.arch)
 
             return redirect(index)
         
