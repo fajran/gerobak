@@ -1,0 +1,100 @@
+{% extends "doc/base.html" %}
+
+{% block extrahead %}
+<link rel="stylesheet" type="text/css" href="/media/css/howto.css"/>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#howto p.ss img').each(function(img) {
+        var w = $(this).width();
+        var ws = parseInt(w * 0.75);
+        $(this).width(ws);
+    });
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<h2>How To Use Gerobak</h2>
+
+<div id="howto">
+
+<ol>
+<li>Get an access and log in</li>
+<li><a href="#add-profile">Add a profile</a> and open it</li>
+<li><a href="#upload-status">Upload status file</a></li>
+<li><a href="#set-sources">Set software sources</a></li>
+<li><a href="#update">Update repository index</a></li>
+<li><a href="#search">Search</a>,
+    <a href="#install">install packages</a>,
+    or <a href="#upgrade">upgrade installed softwares</a></li>
+<li>Copy the URLs</li>
+<li>Download them using your favorite download manager</li>
+<li>Bring the packages home</li>
+<li>Install them on your machine</li>
+</ol>
+
+<div id="add-profile" class="block">
+<h3>Add a profile</h3>
+<p>Enter the name, optional description, and architecture of the new profile.</p>
+<p class="ss"><img src="/media/img/howto/profile-index.png"/></p>
+<p>Click the link to open it.</p>
+<p class="ss"><img src="/media/img/howto/profile-show.png"/></p>
+</div>
+
+<div id="upload-status" class="block">
+<h3>Upload status file</h3>
+<p>Before able to do anything else, you have to complete three tasks:</p>
+<ol>
+<li>Upload the status file of your machine. This file is located at
+    <code>/var/lib/dpkg/status</code> and contains all information
+    about installed packages on your machine.</li>
+<li>Set software sources. This is the content of a file called
+    <code>/etc/apt/sources.list</code> on your machine.</li>
+<li>Update repository index. Make the repository database up to date
+    by running the update.</li>
+<ol>
+<p class="ss"><img src="/media/img/howto/profile-upload-status.png"/></p>
+</div>
+
+<div id="set-sources" class="block">
+<h3>Set software sources</h3>
+<p>In other words, what repositories should be looked at when
+    searching, installing, and upgrading packages.</p>
+<p class="ss"><img src="/media/img/howto/profile-sources.png"/></p>
+</div>
+
+<div id="update" class="block">
+<h3>Update repository index</h3>
+<p>Download list of packages available in the repositories.</p>
+<p class="ss"><img src="/media/img/howto/profile-update.png"/></p>
+<p>Three new tabs will be made visible after you complete these three tasks.</p>
+<p class="ss"><img src="/media/img/howto/profile-uptodate.png"/></p>
+</div>
+
+<div id="search" class="block">
+<h3>Search, ...</h3>
+<p>Now you can search for packages. Mark the result to add it to the
+    to-be-installed-packages list in the Install tab.</p>
+<p class="ss"><img src="/media/img/howto/profile-search-add.png"/></p>
+<p>Clicking the package name will show you the description of the package.</p>
+<p class="ss"><img src="/media/img/howto/profile-show-package.png"/></p>
+</div>
+
+<div id="install" class="block">
+<h3>install new packages, ...</h3>
+<p>Add some packages to be installed and click the install button after
+    you finish. List of URLs of required packages will be shown.</p>
+<p class="ss"><img src="/media/img/howto/profile-install.png"/></p>
+</div>
+
+<div id="upgrade" class="block">
+<h3>or upgrade your system</h3>
+<p>Based on the status file you upload earlier, new packages in the repositories
+    can be checked and downloaded so you can make your system up to date.</p>
+<p class="ss"><img src="/media/img/howto/profile-upgrade.png"/></p>
+</div>
+
+</div>
+
+{% endblock %}
+

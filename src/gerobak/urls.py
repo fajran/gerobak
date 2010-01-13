@@ -13,6 +13,9 @@ urlpatterns = patterns('',
 
     (r'^admin/', include(admin.site.urls)),
 
+    (r'^doc/howto/$', 'django.views.generic.simple.direct_to_template', 
+        {'template': 'doc/howto.html'}),
+
     (r'^p/', include(gerobak.apps.profile.urls)),
     #(r'^q/', include(gerobak.apps.queue.urls)),
     (r'^accounts/', include('registration.backends.default.urls')),
