@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css" href="/media/css/howto.css"/>
 <script type="text/javascript">
 $(document).ready(function() {
-    $('#howto p.ss img').each(function(img) {
+    $('#howto p.ss img').load(function() {
         var w = $(this).width();
         var ws = parseInt(w * 0.75);
         $(this).width(ws);
