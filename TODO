@@ -1,0 +1,25 @@
+asynchronous connection (and process)
+- update
+- install, upgrade, dist-upgrade
+
+compressed status file
+- tar-archived
+- zipped status
+
+anonymous user: regular apt-web mode
+- show basic installation profiles
+- still has to be managed by a user (admin?)
+
+cached/shared Packages
+
+sources list generator
+- limit values to sources.list
+- use a generator, don't allow raw input
+- sources:
+  - distro: ubuntu, debian, blankon
+  - known third party: e.g. canonical, google, opera, etc
+  - launchpad's ppa
+
+predefined status file
+- basic installation of distros
+
