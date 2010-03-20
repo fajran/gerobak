@@ -12,6 +12,12 @@ def get_path(pid):
     return os.path.join(os.path.abspath(settings.GEROBAK_WORKING_DIR), 
                         str(pid))
 
+def check_pid(pid):
+    return check_path(get_path(pid))
+
+def check_path(path):
+    return os.path.isdir(path)
+
 def prepare_profile_dir(path):
     src = os.path.join(settings.GEROBAK_WORKING_DIR, 'base')
     shutil.copytree(src, path)

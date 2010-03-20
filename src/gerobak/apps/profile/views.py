@@ -48,7 +48,7 @@ def _post(func):
 
 def _profile(func):
     def _func(request, pid, *args, **kwargs):
-        profile = get_object_or_404(Profile, pk=pid)
+        profile = get_object_or_404(Profile, pid=pid)
         if profile.user != request.user:
             # TODO
             return HttpResponseForbidden()
@@ -62,7 +62,7 @@ def _updated(func):
            profile.repo_updated is None:
             
             request.user.message_set.create(message="update needed.")
-            return redirect(show, profile.id)
+            return redirect(show, profile.pid)
 
         return func(request, profile, *args, **kwargs)
     return _func
@@ -73,7 +73,7 @@ def _pre_updated(func):
            profile.sources_updated is None:
             
             request.user.message_set.create(message="status or sources is missing")
-            return redirect(show, profile.id)
+            return redirect(show, profile.pid)
 
         return func(request, profile, *args, **kwargs)
     return _func
@@ -102,7 +102,7 @@ def _decompress(realname, path):
 def handle_uploaded_status(profile, file):
     # FIXME file size should be checked and limited
 
-    path = utils.get_path(profile.id)
+    path = utils.get_path(profile.pid)
     status = file.temporary_file_path()
 
     tmp = None
@@ -125,7 +125,7 @@ def upgrade(request, profile):
     if not format in ['html', 'json']:
         format = 'html'
 
-    path = utils.get_path(profile.id)
+    path = utils.get_path(profile.pid)
     ret, out, err = apt.upgrade(path)
     
     return _show_install(ret, out, err, format, type="upgrade")
@@ -139,7 +139,7 @@ def dist_upgrade(request, profile):
     if not format in ['html', 'json']:
         format = 'html'
 
-    path = utils.get_path(profile.id)
+    path = utils.get_path(profile.pid)
     ret, out, err = apt.dist_upgrade(path)
     
     return _show_install(ret, out, err, format, type="dist-upgrade")
@@ -198,14 +198,14 @@ def install(request, profile):
     form = InstallForm(request.POST)
     if form.is_valid():
         packages = form.cleaned_data['packages']
-        path = utils.get_path(profile.id)
+        path = utils.get_path(profile.pid)
         pkgs, ret, out, err = apt.install(path, packages)
 
         return _show_install(ret, out, err, format, packages=pkgs)
     else:
         print "invalid"
         print form.as_p()
-    return HttpResponse('install pid=%d' % profile.id)
+    return HttpResponse('install pid=%d' % profile.pid)
 
 @login_required
 @_profile
@@ -215,7 +215,7 @@ def info(request, profile, pkg):
     if not format in ['html', 'json']:
         format = 'html'
 
-    path = utils.get_path(profile.id)
+    path = utils.get_path(profile.pid)
     pkg, code, out, err = apt.show(path, pkg)
 
     if code == 100: # Not found
@@ -265,7 +265,7 @@ def search(request, profile):
     form = SearchForm(request.POST)
     if form.is_valid():
         packages = form.cleaned_data['packages']
-        path = utils.get_path(profile.id)
+        path = utils.get_path(profile.pid)
         pkgs, ret, out, err = apt.search(path, packages)
 
         pkgs = ' '.join(pkgs)
@@ -277,14 +277,14 @@ def search(request, profile):
     else:
         print "invalid"
         print form.as_p()
-    return HttpResponse('search pid=%d' % profile.id)
+    return HttpResponse('search pid=%d' % profile.pid)
 
 @login_required
 @_post
 @_profile
 @_pre_updated
 def update(request, profile):
-    path = utils.get_path(profile.id)
+    path = utils.get_path(profile.pid)
     ret, out, err = apt.update(path)
 
     profile.repo_updated = datetime.now()
@@ -302,16 +302,16 @@ def sources(request, profile):
     form = SourcesForm(request.POST)
     if form.is_valid():
         sources = form.cleaned_data['sources']
-        path = utils.get_path(profile.id)
+        path = utils.get_path(profile.pid)
         utils.update_sources(path, sources)
         profile.sources_updated = datetime.now()
         profile.repo_updated = None
         profile.save()
-        return redirect(show, profile.id)
+        return redirect(show, profile.pid)
     else:
         print "invalid"
         print form.as_p()
-    return HttpResponse('sources pid=%d' % profile.id)
+    return HttpResponse('sources pid=%d' % profile.pid)
 
 @login_required
 @_post
@@ -329,18 +329,18 @@ def status(request, profile):
         profile.status_hash = hash
 
         profile.save()
-        return redirect(show, profile.id)
+        return redirect(show, profile.pid)
     else:
         print "invalid"
         print form.as_p()
-    return HttpResponse('status pid=%d' % profile.id)
+    return HttpResponse('status pid=%d' % profile.pid)
 
 @login_required
 @_profile
 def show(request, profile):
     upload_form = UploadStatusForm()
 
-    path = utils.get_path(profile.id)
+    path = utils.get_path(profile.pid)
     sources = utils.get_repo(path)
     sources_form = SourcesForm({'sources': sources})
 
@@ -366,9 +366,16 @@ def index(request):
             profile.name = form.cleaned_data['name']
             profile.desc = form.cleaned_data['desc']
             profile.arch = form.cleaned_data['arch']
+
+            while True:
+                pid = profile.generate_pid()
+                if not utils.check_pid(pid):
+                    profile.pid = pid
+                    break
+
             profile.save()
 
-            path = utils.get_path(profile.id)
+            path = utils.get_path(profile.pid)
             utils.prepare_profile_dir(path)
             utils.configure_profile(path, arch=profile.arch)
 

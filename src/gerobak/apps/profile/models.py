@@ -6,6 +6,8 @@ from django.db.models.signals import post_save
 from gerobak import utils
 
 class Profile(models.Model):
+    pid = models.CharField(max_length=8)
+
     user = models.ForeignKey(User)
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -28,4 +30,8 @@ class Profile(models.Model):
     def is_ready(self):
         return self.repo_updated is not None and \
                self.status_updated is not None
+
+    def generate_pid(self):
+        import uuid
+        return str(uuid.uuid4()).split('-')[0]
 
