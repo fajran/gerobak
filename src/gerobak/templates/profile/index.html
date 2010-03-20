@@ -36,5 +36,12 @@ have.</p>
 
 {% block extrahead %}
 <link rel="stylesheet" type="text/css" href="/media/profile-index.css"/>
+{% if not profiles %}
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#id_name').focus();
+});
+</script>
+{% endif %}
 {% endblock %}
 
