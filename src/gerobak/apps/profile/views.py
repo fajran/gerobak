@@ -284,6 +284,9 @@ def search(request, profile):
 @_profile
 @_pre_updated
 def update(request, profile):
+    profile.repo_updated = None
+    profile.save()
+
     path = utils.get_path(profile.pid)
     ret, out, err = apt.update(path)
 
