@@ -15,7 +15,7 @@
 {% if user.is_authenticated %}
 <p>Welcome, <strong>{{ user.username }}</strong>! 
     <a href="/accounts/password/change/">Change Password</a> /
-    <a href="/accounts/logout/">Logout</a>
+    <a href="/accounts/logout/?next=/">Logout</a>
 </p>
 {% else %}
 <p><a href="/accounts/login/">Login</a></p>
