@@ -9,6 +9,7 @@ setup(
     author = 'Fajran Iman Rusadi',
     packages = find_packages('src'),
     package_dir = {'': 'src'},
-    install_requires = ['setuptools', 'django-registration', 'simplejson'],
+    install_requires = ['setuptools', 'django-registration', 'simplejson',
+                        'celery', 'ghettoq'],
 )
 
