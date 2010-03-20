@@ -54,6 +54,31 @@ br.clear {
     position: fixed;
 }
 
+/*= Login Page =*/
+
+#content .login form label {
+    float: left;
+    width: 70px;
+    text-align: right;
+    padding-top: 2px;
+}
+#content .login form {
+    text-align: right;
+    width: 230px;
+}
+#content .login form input[type="text"],
+#content .login form input[type="password"] {
+    width: 150px;
+    padding: 2px;
+}
+#content .login form > p + p + p {
+    text-align: right;
+}
+#content .login .error {
+    color: red;
+    margin-bottom: 15px;
+}
+
 /*
 
 #content div.msg {
