@@ -35,20 +35,15 @@ def search(id, packages):
     return pkgs, ret, out, err
 
 @task(max_retries=1)
-def upgrade(id):
+def upgrade(id, type='upgrade'):
     profile = Profile.objects.get(pk=id)
 
     path = utils.get_path(profile.pid)
-    ret, out, err = apt.upgrade(path)
 
-    return ret, out, err
+    if type == 'dist-upgrade':
+        ret, out, err = apt.dist_upgrade(path)
+    else:
+        ret, out, err = apt.upgrade(path)
 
-@task(max_retries=1)
-def dist_upgrade(id):
-    profile = Profile.objects.get(pk=id)
-
-    path = utils.get_path(profile.pid)
-    ret, out, err = apt.dist_upgrade(path)
-
-    return ret, out, err
+    return type, ret, out, err
 

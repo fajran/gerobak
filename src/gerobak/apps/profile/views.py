@@ -119,21 +119,27 @@ def handle_uploaded_status(profile, file):
 
     return path
 
-@login_required
-@_post
-@_profile
-@_updated
-def upgrade(request, profile):
-    format = request.GET.get('format', 'html')
-    if not format in ['html', 'json']:
-        format = 'html'
-
-    task = tasks.upgrade.delay(profile.id)
+def _upgrade(request, profile, type='upgrade'):
+    task = tasks.upgrade.delay(profile.id, type)
     data = {'stat': 'ok',
             'task_id': task.task_id}
 
     return render_to_response('profile/json', {'json': json.dumps(data)},
                               mimetype='text/plain')
+
+@login_required
+@_post
+@_profile
+@_updated
+def upgrade(request, profile):
+    return _upgrade(request, profile)
+
+@login_required
+@_post
+@_profile
+@_updated
+def dist_upgrade(request, profile):
+    return _upgrade(request, profile, 'dist-upgrade')
 
 @login_required
 @_profile
@@ -141,39 +147,8 @@ def upgrade(request, profile):
 def upgrade_result(request, profile, task_id):
     task = AsyncResult(task_id)
     if task.status == 'SUCCESS':
-        ret, out, err = task.result
-        return _show_install(ret, out, err, 'json', type='upgrade')
-    elif task.status == 'PENDING':
-        data = {'stat': 'pending'}
-    else:
-        data = {'stat': 'fail'}
-    return render_to_response('profile/json', {'json': json.dumps(data)},
-                              mimetype='text/plain')
-
-@login_required
-@_post
-@_profile
-@_updated
-def dist_upgrade(request, profile):
-    format = request.GET.get('format', 'html')
-    if not format in ['html', 'json']:
-        format = 'html'
-
-    task = tasks.dist_upgrade.delay(profile.id)
-    data = {'stat': 'ok',
-            'task_id': task.task_id}
-
-    return render_to_response('profile/json', {'json': json.dumps(data)},
-                              mimetype='text/plain')
-
-@login_required
-@_profile
-@_updated
-def dist_upgrade_result(request, profile, task_id):
-    task = AsyncResult(task_id)
-    if task.status == 'SUCCESS':
-        ret, out, err = task.result
-        return _show_install(ret, out, err, 'json', type='dist-upgrade')
+        type, ret, out, err = task.result
+        return _show_install(ret, out, err, 'json', type=type)
     elif task.status == 'PENDING':
         data = {'stat': 'pending'}
     else:

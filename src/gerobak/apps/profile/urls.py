@@ -11,9 +11,6 @@ urlpatterns = patterns('',
     (r'^(?P<pid>[a-f0-9]{8})/upgrade/(?P<task_id>[\w\d\-]+)/$',
         views.upgrade_result),
     (r'^(?P<pid>[a-f0-9]{8})/upgrade/$', views.upgrade),
-
-    (r'^(?P<pid>[a-f0-9]{8})/dist-upgrade/(?P<task_id>[\w\d\-]+)/$',
-        views.dist_upgrade_result),
     (r'^(?P<pid>[a-f0-9]{8})/dist-upgrade/$', views.dist_upgrade),
 
     (r'^(?P<pid>[a-f0-9]{8})/search/(?P<task_id>[\w\d\-]+)/$',
