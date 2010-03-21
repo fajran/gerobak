@@ -4,6 +4,8 @@ from django.conf import settings
 from gerobak.apps.profile import views
 
 urlpatterns = patterns('',
+    (r'^(?P<pid>[a-f0-9]{8})/install/(?P<task_id>[\w\d\-]+)/$',
+        views.install_result),
     (r'^(?P<pid>[a-f0-9]{8})/install/$', views.install),
     (r'^(?P<pid>[a-f0-9]{8})/upgrade/$', views.upgrade),
     (r'^(?P<pid>[a-f0-9]{8})/dist-upgrade/$', views.dist_upgrade),

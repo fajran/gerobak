@@ -16,3 +16,12 @@ def update(id):
     profile.tid_update = None
     profile.save()
 
+@task(max_retries=1)
+def install(id, packages):
+    profile = Profile.objects.get(pk=id)
+
+    path = utils.get_path(profile.pid)
+    pkgs, ret, out, err = apt.install(path, packages)
+
+    return pkgs, ret, out, err
+

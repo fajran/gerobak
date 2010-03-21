@@ -14,6 +14,8 @@ from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 
+from celery.result import AsyncResult
+
 from gerobak import utils, apt
 from gerobak.apps.profile import tasks
 from gerobak.apps.profile.models import Profile
@@ -199,14 +201,33 @@ def install(request, profile):
     form = InstallForm(request.POST)
     if form.is_valid():
         packages = form.cleaned_data['packages']
-        path = utils.get_path(profile.pid)
-        pkgs, ret, out, err = apt.install(path, packages)
+        task = tasks.install.delay(profile.id, packages)
 
-        return _show_install(ret, out, err, format, packages=pkgs)
+        #pkgs, ret, out, err = tasks.install.delay(profile.id, packages)
+        #return _show_install(ret, out, err, format, packages=pkgs)
+        data = {'stat': 'ok',
+                'task_id': task.task_id}
+        return render_to_response('profile/json', {'json': json.dumps(data)},
+                                  mimetype='text/plain')
     else:
         print "invalid"
         print form.as_p()
     return HttpResponse('install pid=%d' % profile.pid)
+
+@login_required
+@_profile
+@_updated
+def install_result(request, profile, task_id):
+    task = AsyncResult(task_id)
+    if task.status == 'SUCCESS':
+        pkgs, ret, out, err = task.result
+        return _show_install(ret, out, err, 'json', packages=pkgs)
+    elif task.status == 'PENDING':
+        data = {'stat': 'pending'}
+    else:
+        data = {'stat': 'fail'}
+    return render_to_response('profile/json', {'json': json.dumps(data)},
+                              mimetype='text/plain')
 
 @login_required
 @_profile

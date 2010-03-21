@@ -48,6 +48,8 @@ var ph = {
     install: {
         packages: [],
 
+        _task_id: undefined,
+
         _add: function(pkgs) {
             var items = pkgs.split(" ");
             var len = items.length;
@@ -239,9 +241,34 @@ var ph = {
                     console.log('complete.', 'stat:', stat);
                 },
                 success: function(data, stat) {
-                    self.show(data);
+                    profile.install._task_id = data['task_id']
+                    setTimeout(profile.install.check, 500);
                 }
-            });
+            })
+        },
+
+        check: function() {
+            var task_id = profile.install._task_id;
+            if (task_id == undefined) { return; }
+
+            $.ajax({
+                type: 'GET',
+                url: 'install/' + task_id + '/',
+                dataType: 'json',
+                complete: function(xhr, stat) {
+                    console.log('complete.', 'stat:', stat);
+                },
+                success: function(data, stat) {
+                    if (data['stat'] == 'ok') {
+                        profile.install._task_id = undefined;
+                        profile.install.show(data);
+                    }
+                    else {
+                        setTimeout(profile.install.check, 1000);
+                    }
+                }
+            })
+
         }
     },
 
