@@ -28,8 +28,6 @@ class Profile(models.Model):
     status_size = models.IntegerField(default=0)
 
     tid_update = models.CharField(max_length=36, null=True, default=None)
-    tid_install = models.CharField(max_length=36, null=True, default=None)
-    tid_upgrade = models.CharField(max_length=36, null=True, default=None)
 
     def is_ready(self):
         return self.repo_updated is not None and \
