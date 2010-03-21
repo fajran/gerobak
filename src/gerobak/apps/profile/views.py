@@ -128,10 +128,27 @@ def upgrade(request, profile):
     if not format in ['html', 'json']:
         format = 'html'
 
-    path = utils.get_path(profile.pid)
-    ret, out, err = apt.upgrade(path)
-    
-    return _show_install(ret, out, err, format, type="upgrade")
+    task = tasks.upgrade.delay(profile.id)
+    data = {'stat': 'ok',
+            'task_id': task.task_id}
+
+    return render_to_response('profile/json', {'json': json.dumps(data)},
+                              mimetype='text/plain')
+
+@login_required
+@_profile
+@_updated
+def upgrade_result(request, profile, task_id):
+    task = AsyncResult(task_id)
+    if task.status == 'SUCCESS':
+        ret, out, err = task.result
+        return _show_install(ret, out, err, 'json', type='upgrade')
+    elif task.status == 'PENDING':
+        data = {'stat': 'pending'}
+    else:
+        data = {'stat': 'fail'}
+    return render_to_response('profile/json', {'json': json.dumps(data)},
+                              mimetype='text/plain')
 
 @login_required
 @_post
@@ -142,11 +159,27 @@ def dist_upgrade(request, profile):
     if not format in ['html', 'json']:
         format = 'html'
 
-    path = utils.get_path(profile.pid)
-    ret, out, err = apt.dist_upgrade(path)
-    
-    return _show_install(ret, out, err, format, type="dist-upgrade")
+    task = tasks.dist_upgrade.delay(profile.id)
+    data = {'stat': 'ok',
+            'task_id': task.task_id}
 
+    return render_to_response('profile/json', {'json': json.dumps(data)},
+                              mimetype='text/plain')
+
+@login_required
+@_profile
+@_updated
+def dist_upgrade_result(request, profile, task_id):
+    task = AsyncResult(task_id)
+    if task.status == 'SUCCESS':
+        ret, out, err = task.result
+        return _show_install(ret, out, err, 'json', type='dist-upgrade')
+    elif task.status == 'PENDING':
+        data = {'stat': 'pending'}
+    else:
+        data = {'stat': 'fail'}
+    return render_to_response('profile/json', {'json': json.dumps(data)},
+                              mimetype='text/plain')
 
 def _show_install(ret, out, err, format, **kwargs):
     if ret != 0:

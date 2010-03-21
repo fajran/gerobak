@@ -463,6 +463,8 @@ var ph = {
     },
 
     upgrade: {
+        _task_id: undefined,
+
         start: function() {
             this._start('upgrade');
         },
@@ -478,8 +480,34 @@ var ph = {
                     console.log('complete.', 'stat:', stat);
                 },
                 success: function(data, stat) {
-                    ph.install.show(data, '#upgrade-result');
-                    $('#upgrade').find('input[type="submit"]').attr('disabled', '');
+                    //ph.install.show(data, '#upgrade-result');
+                    //$('#upgrade').find('input[type="submit"]').attr('disabled', '');
+                    ph.upgrade._task_id = data['task_id'];
+                    setTimeout(ph.upgrade.check, 500);
+                }
+            });
+        },
+
+        check: function() {
+            var task_id = ph.upgrade._task_id;
+            if (task_id == undefined) { return; }
+
+            $.ajax({
+                type: 'GET',
+                url: 'upgrade/' + task_id + '/',
+                dataType: 'json',
+                complete: function(xhr, stat) {
+                    console.log('complete.', 'stat:', stat);
+                },
+                success: function(data, stat) {
+                    if (data['stat'] == 'ok') {
+                        ph.upgrade._task_id = undefined;
+                        ph.install.show(data, '#upgrade-result');
+                        $('#upgrade').find('input[type="submit"]').attr('disabled', '');
+                    }
+                    else {
+                        setTimeout(ph.upgrade.check, 1000);
+                    }
                 }
             });
         }

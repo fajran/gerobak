@@ -7,11 +7,19 @@ urlpatterns = patterns('',
     (r'^(?P<pid>[a-f0-9]{8})/install/(?P<task_id>[\w\d\-]+)/$',
         views.install_result),
     (r'^(?P<pid>[a-f0-9]{8})/install/$', views.install),
+
+    (r'^(?P<pid>[a-f0-9]{8})/upgrade/(?P<task_id>[\w\d\-]+)/$',
+        views.upgrade_result),
     (r'^(?P<pid>[a-f0-9]{8})/upgrade/$', views.upgrade),
+
+    (r'^(?P<pid>[a-f0-9]{8})/dist-upgrade/(?P<task_id>[\w\d\-]+)/$',
+        views.dist_upgrade_result),
     (r'^(?P<pid>[a-f0-9]{8})/dist-upgrade/$', views.dist_upgrade),
+
     (r'^(?P<pid>[a-f0-9]{8})/search/(?P<task_id>[\w\d\-]+)/$',
         views.search_result),
     (r'^(?P<pid>[a-f0-9]{8})/search/$', views.search),
+
     (r'^(?P<pid>[a-f0-9]{8})/update/$', views.update),
     (r'^(?P<pid>[a-f0-9]{8})/sources/$', views.sources),
     (r'^(?P<pid>[a-f0-9]{8})/status/$', views.status),
