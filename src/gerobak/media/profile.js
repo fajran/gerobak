@@ -480,6 +480,7 @@ var ph = {
                     console.log(data);
                     if (data['task']['status'] == 'SUCCESS') {
                         btn.attr('disabled', '');
+                        ph.update._task_id = undefined;
                         window.location.reload();
                     }
                     else {
