@@ -268,7 +268,6 @@ var ph = {
                     }
                 }
             })
-
         }
     },
 
@@ -330,6 +329,8 @@ var ph = {
     },
 
     search: {
+        _task_id: undefined,
+        _query: undefined,
     
         show: function(query, data) {
             var items = data.data.items;
@@ -421,9 +422,37 @@ var ph = {
                     console.log('stat:', stat);
                 },
                 success: function(data, stat) {
-                    self.show(query, data);
+                    ph.search._task_id = data['task_id'];
+                    ph.search._query = query;
+                    setTimeout(ph.search.check, 500);
+                    //self.show(query, data);
                 }
             });
+        },
+
+        check: function() {
+            var task_id = ph.search._task_id;
+            if (task_id == undefined) { return; }
+
+            $.ajax({
+                type: 'GET',
+                url: 'search/' + task_id + '/',
+                dataType: 'json',
+                complete: function(xhr, stat) {
+                    console.log('complete.', 'stat:', stat);
+                },
+                success: function(data, stat) {
+                    if (data['stat'] == 'ok') {
+                        var query = ph.search._query;
+                        ph.search._task_id = undefined;
+                        ph.search._query = undefined;
+                        ph.search.show(query, data);
+                    }
+                    else {
+                        setTimeout(ph.search.check, 1000);
+                    }
+                }
+            })
         }
     },
 

@@ -25,3 +25,12 @@ def install(id, packages):
 
     return pkgs, ret, out, err
 
+@task(max_retries=1)
+def search(id, packages):
+    profile = Profile.objects.get(pk=id)
+
+    path = utils.get_path(profile.pid)
+    pkgs, ret, out, err = apt.search(path, packages)
+
+    return pkgs, ret, out, err
+

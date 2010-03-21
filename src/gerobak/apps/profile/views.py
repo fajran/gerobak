@@ -285,19 +285,36 @@ def search(request, profile):
     form = SearchForm(request.POST)
     if form.is_valid():
         packages = form.cleaned_data['packages']
-        path = utils.get_path(profile.pid)
-        pkgs, ret, out, err = apt.search(path, packages)
+        task = tasks.search.delay(profile.id, packages)
 
-        pkgs = ' '.join(pkgs)
-
-        return render_to_response('profile/search.%s' % format, 
-                                  {'pkgs': pkgs,
-                                   'ret': ret,
-                                   'items': parse_apt_search(out)})
+        data = {'stat': 'ok',
+                'task_id': task.task_id}
+        return render_to_response('profile/json', {'json': json.dumps(data)},
+                                  mimetype='text/plain')
     else:
         print "invalid"
         print form.as_p()
     return HttpResponse('search pid=%d' % profile.pid)
+
+@login_required
+@_profile
+@_updated
+def search_result(request, profile, task_id):
+    task = AsyncResult(task_id)
+    if task.status == 'SUCCESS':
+        pkgs, ret, out, err = task.result
+        pkgs = ' '.join(pkgs)
+
+        return render_to_response('profile/search.json',
+                                  {'pkgs': pkgs,
+                                   'ret': ret,
+                                   'items': parse_apt_search(out)})
+    elif task.status == 'PENDING':
+        data = {'stat': 'pending'}
+    else:
+        data = {'stat': 'fail'}
+    return render_to_response('profile/json', {'json': json.dumps(data)},
+                              mimetype='text/plain')
 
 @login_required
 @_post
