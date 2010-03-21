@@ -468,6 +468,7 @@ var ph = {
         },
 
         _start: function(path) {
+            $('#upgrade').find('input[type="submit"]').attr('disabled', 'disabled');
             show_loader($('#upgrade-result'));
             $.ajax({
                 type: 'POST',
@@ -478,6 +479,7 @@ var ph = {
                 },
                 success: function(data, stat) {
                     ph.install.show(data, '#upgrade-result');
+                    $('#upgrade').find('input[type="submit"]').attr('disabled', '');
                 }
             });
         }
