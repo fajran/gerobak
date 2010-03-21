@@ -19,5 +19,6 @@ urlpatterns = patterns('',
     (r'^p/', include(gerobak.apps.profile.urls)),
     #(r'^q/', include(gerobak.apps.queue.urls)),
     (r'^accounts/', include('registration.backends.default.urls')),
+    (r'^task/', include('celery.urls')),
     (r'^$', 'gerobak.views.index'),
 )

@@ -60,6 +60,8 @@ INSTALLED_APPS = (
     'gerobak',
     'gerobak.apps.profile',
     'registration',
+    'celery',
+    'ghettoq',
 )
 
 FILE_UPLOAD_HANDLERS = (
@@ -83,4 +85,8 @@ GEROBAK_WORKING_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                    'work')
 
 EMAIL_PORT = 1025
+
+CELERY_BACKEND = 'database'
+CELERY_IMPORTS = ("gerobak.apps.profile.tasks", )
+CARROT_BACKEND = "ghettoq.taproot.Database"
 
