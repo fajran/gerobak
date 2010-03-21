@@ -69,8 +69,12 @@
             {% else %}
             <p><span class="label">Last update:</span> Never</p>
             {% endif %}
-            <form method="post" action="update/" onsubmit="profile.update.start(this); return false;">
+            <form method="post" action="update/" onsubmit="profile.update.start(); return false;">
+            {% if profile.tid_update %}
+            <p class="cmd"><input type="submit" value="Update Repository" disabled="disabled"/></p>
+            {% else %}
             <p class="cmd"><input type="submit" value="Update Repository"/></p>
+            {% endif %}
             </form>
             </div>
         </div>
@@ -148,6 +152,9 @@ predefined status file
 <script type="text/javascript">
 $(document).ready(function() {
     profile.init();
+    {% if profile.tid_update %}
+    profile.update.check('{{ profile.tid_update }}');
+    {% endif %}
     ZeroClipboard.setMoviePath('/media/zeroclipboard/ZeroClipboard.swf');
 });
 </script>

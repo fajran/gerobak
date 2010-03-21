@@ -428,24 +428,70 @@ var ph = {
     },
 
     update: {
-        start: function(sender) {
-            var btn = $(sender).find('input[type="submit"]');
-            btn.attr('disabled', 'disabled');
-            btn.after('<span class="loader"><img src="/media/img/loader.gif"/> updating..</span>');
+        _task_id: undefined,
+        _watch_delay: 500,
+
+        start: function() {
+            $('.tabs').tabs('disable', 1);
+            $('.tabs').tabs('disable', 2);
+            $('.tabs').tabs('disable', 3);
+
+            ph.update._show_updating();
 
             $.ajax({
                 type: 'POST',
                 url: 'update/',
-                dataType: 'text',
+                dataType: 'json',
                 complete: function(xhr, stat) {
                 },
                 success: function(data, stat) {
-                    btn.attr('disabled', '');
-                    console.log(window.location.href);
-                    window.location.reload();
+                    var task_id = data['task_id'];
+                    ph.update.check(task_id);
                 },
             });
-        }
+        },
+
+        check: function(task_id) {
+            ph.update._task_id = task_id;
+            ph.update._watch_delay = 500;
+            setTimeout(ph.update._watch, ph.update._watch_delay);
+        },
+
+        _show_updating: function() {
+            var btn = $('#update').find('input[type="submit"]');
+            btn.attr('disabled', 'disabled');
+            if (btn.parent().find('.loader').length == 0) {
+                btn.after('<span class="loader"><img src="/media/img/loader.gif"/> updating..</span>');
+            }
+            return btn;
+        },
+
+        _watch: function() {
+            var task_id = ph.update._task_id;
+            if (task_id == undefined) { return; }
+
+            var btn = ph.update._show_updating();
+
+            $.ajax({
+                type: 'GET',
+                url: '/task/' + task_id + '/status/',
+                dataType: 'json',
+                success: function(data, stat) {
+                    console.log(data);
+                    if (data['task']['status'] == 'SUCCESS') {
+                        btn.attr('disabled', '');
+                        window.location.reload();
+                    }
+                    else {
+                        ph.update._watch_delay *= 2;
+                        if (ph.update._watch_delay > 10000) {
+                            ph.update._watch_delay = 10000;
+                        }
+                        setTimeout(ph.update._watch, ph.update._watch_delay);
+                    }
+                }
+            });
+        },
     },
 
     status: {

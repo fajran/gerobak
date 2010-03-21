@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 
 from gerobak import utils, apt
+from gerobak.apps.profile import tasks
 from gerobak.apps.profile.models import Profile
 from gerobak.apps.profile.utils import parse_apt_install, \
                                        parse_apt_search, \
@@ -287,16 +288,15 @@ def update(request, profile):
     profile.repo_updated = None
     profile.save()
 
-    path = utils.get_path(profile.pid)
-    ret, out, err = apt.update(path)
-
-    profile.repo_updated = datetime.now()
+    task = tasks.update.delay(profile.id)
+    print 'update:', task.task_id
+    profile.tid_update = task.task_id
     profile.save()
 
-    return render_to_response('profile/update.html', 
-                              {'ret': ret,
-                               'out': out,
-                               'err': err})
+    data = {'stat': 'ok',
+            'task_id': task.task_id}
+    return render_to_response('profile/json', {'json': json.dumps(data)},
+                              mimetype='text/plain')
 
 @login_required
 @_post
