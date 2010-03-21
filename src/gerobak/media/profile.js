@@ -49,6 +49,7 @@ var ph = {
         packages: [],
 
         _task_id: undefined,
+        _delay: 500,
 
         _add: function(pkgs) {
             var items = pkgs.split(" ");
@@ -239,7 +240,8 @@ var ph = {
                 data: {packages: packages},
                 success: function(data, stat) {
                     ph.install._task_id = data['task_id']
-                    setTimeout(ph.install.check, 500);
+                    ph.install.delay = 500;
+                    setTimeout(ph.install.check, ph.install._delay);
                 }
             })
         },
@@ -258,7 +260,11 @@ var ph = {
                         ph.install.show(data);
                     }
                     else {
-                        setTimeout(ph.install.check, 1000);
+                        ph.install._delay *= 2;
+                        if (ph.install._delay > 10000) {
+                            ph.install._delay = 10000;
+                        }
+                        setTimeout(ph.install.check, ph.install._delay);
                     }
                 }
             })
@@ -325,6 +331,7 @@ var ph = {
     search: {
         _task_id: undefined,
         _query: undefined,
+        _delay: 500,
     
         show: function(query, data) {
             var items = data.data.items;
@@ -414,7 +421,8 @@ var ph = {
                 success: function(data, stat) {
                     ph.search._task_id = data['task_id'];
                     ph.search._query = query;
-                    setTimeout(ph.search.check, 500);
+                    ph.search._delay = 500;
+                    setTimeout(ph.search.check, ph.search._delay);
                 }
             });
         },
@@ -435,7 +443,11 @@ var ph = {
                         ph.search.show(query, data);
                     }
                     else {
-                        setTimeout(ph.search.check, 1000);
+                        ph.search._delay *= 2;
+                        if (ph.search._delay > 10000) {
+                            ph.search._delay = 10000;
+                        }
+                        setTimeout(ph.search.check, ph.search._delay);
                     }
                 }
             })
@@ -450,6 +462,7 @@ var ph = {
 
     upgrade: {
         _task_id: undefined,
+        _delay: 500,
 
         start: function() {
             this._start('upgrade');
@@ -464,7 +477,8 @@ var ph = {
                 dataType: 'json',
                 success: function(data, stat) {
                     ph.upgrade._task_id = data['task_id'];
-                    setTimeout(ph.upgrade.check, 500);
+                    ph.upgrade._delay = 500;
+                    setTimeout(ph.upgrade.check, ph.upgrade._delay);
                 }
             });
         },
@@ -484,7 +498,11 @@ var ph = {
                         $('#upgrade').find('input[type="submit"]').attr('disabled', '');
                     }
                     else {
-                        setTimeout(ph.upgrade.check, 1000);
+                        ph.upgrade._delay *= 2;
+                        if (ph.upgrade._delay > 10000) {
+                            ph.upgrade._delay = 10000;
+                        }
+                        setTimeout(ph.upgrade.check, ph.upgrade._delay);
                     }
                 }
             });
