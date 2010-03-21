@@ -241,14 +241,14 @@ var ph = {
                     console.log('complete.', 'stat:', stat);
                 },
                 success: function(data, stat) {
-                    profile.install._task_id = data['task_id']
-                    setTimeout(profile.install.check, 500);
+                    ph.install._task_id = data['task_id']
+                    setTimeout(ph.install.check, 500);
                 }
             })
         },
 
         check: function() {
-            var task_id = profile.install._task_id;
+            var task_id = ph.install._task_id;
             if (task_id == undefined) { return; }
 
             $.ajax({
@@ -260,11 +260,11 @@ var ph = {
                 },
                 success: function(data, stat) {
                     if (data['stat'] == 'ok') {
-                        profile.install._task_id = undefined;
-                        profile.install.show(data);
+                        ph.install._task_id = undefined;
+                        ph.install.show(data);
                     }
                     else {
-                        setTimeout(profile.install.check, 1000);
+                        setTimeout(ph.install.check, 1000);
                     }
                 }
             })
