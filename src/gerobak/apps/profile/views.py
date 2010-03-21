@@ -203,8 +203,6 @@ def install(request, profile):
         packages = form.cleaned_data['packages']
         task = tasks.install.delay(profile.id, packages)
 
-        #pkgs, ret, out, err = tasks.install.delay(profile.id, packages)
-        #return _show_install(ret, out, err, format, packages=pkgs)
         data = {'stat': 'ok',
                 'task_id': task.task_id}
         return render_to_response('profile/json', {'json': json.dumps(data)},
