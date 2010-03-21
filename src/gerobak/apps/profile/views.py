@@ -382,7 +382,7 @@ def index(request):
             utils.prepare_profile_dir(path)
             utils.configure_profile(path, arch=profile.arch)
 
-            return redirect(index)
+            return redirect(show, pid)
         
     profiles = Profile.objects.filter(user=request.user)
     return render_to_response('profile/index.html',
