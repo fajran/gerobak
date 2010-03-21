@@ -237,9 +237,6 @@ var ph = {
                 url: 'install/?format=json',
                 dataType: 'json',
                 data: {packages: packages},
-                complete: function(xhr, stat) {
-                    console.log('complete.', 'stat:', stat);
-                },
                 success: function(data, stat) {
                     ph.install._task_id = data['task_id']
                     setTimeout(ph.install.check, 500);
@@ -255,9 +252,6 @@ var ph = {
                 type: 'GET',
                 url: 'install/' + task_id + '/',
                 dataType: 'json',
-                complete: function(xhr, stat) {
-                    console.log('complete.', 'stat:', stat);
-                },
                 success: function(data, stat) {
                     if (data['stat'] == 'ok') {
                         ph.install._task_id = undefined;
@@ -417,15 +411,10 @@ var ph = {
                 url: 'search/?format=json',
                 dataType: 'json',
                 data: {packages: query},
-                complete: function(xhr, stat) {
-                    console.log('complete');
-                    console.log('stat:', stat);
-                },
                 success: function(data, stat) {
                     ph.search._task_id = data['task_id'];
                     ph.search._query = query;
                     setTimeout(ph.search.check, 500);
-                    //self.show(query, data);
                 }
             });
         },
@@ -438,9 +427,6 @@ var ph = {
                 type: 'GET',
                 url: 'search/' + task_id + '/',
                 dataType: 'json',
-                complete: function(xhr, stat) {
-                    console.log('complete.', 'stat:', stat);
-                },
                 success: function(data, stat) {
                     if (data['stat'] == 'ok') {
                         var query = ph.search._query;
@@ -476,12 +462,7 @@ var ph = {
                 type: 'POST',
                 url: path + '/?format=json',
                 dataType: 'json',
-                complete: function(xhr, stat) {
-                    console.log('complete.', 'stat:', stat);
-                },
                 success: function(data, stat) {
-                    //ph.install.show(data, '#upgrade-result');
-                    //$('#upgrade').find('input[type="submit"]').attr('disabled', '');
                     ph.upgrade._task_id = data['task_id'];
                     setTimeout(ph.upgrade.check, 500);
                 }
@@ -496,9 +477,6 @@ var ph = {
                 type: 'GET',
                 url: 'upgrade/' + task_id + '/',
                 dataType: 'json',
-                complete: function(xhr, stat) {
-                    console.log('complete.', 'stat:', stat);
-                },
                 success: function(data, stat) {
                     if (data['stat'] == 'ok') {
                         ph.upgrade._task_id = undefined;
@@ -563,7 +541,6 @@ var ph = {
                 url: '/task/' + task_id + '/status/',
                 dataType: 'json',
                 success: function(data, stat) {
-                    console.log(data);
                     if (data['task']['status'] == 'SUCCESS') {
                         btn.attr('disabled', '');
                         ph.update._task_id = undefined;
